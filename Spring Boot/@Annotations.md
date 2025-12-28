@@ -41,11 +41,11 @@
 |Annotation|Description|
 |---|---|
 |`@Autowired`|Inject bean dependency|
-|`@Qualifier`|Specify which bean to inject when multiple exist|
+|`@Qualifier`|Specify which bean to inject when multiple exist| always win over @Primary and/or @Required(Deprecated not used now)
 |`@Inject`|Standard JSR-330 injection (like `@Autowired`)|
 |`@Value`|Inject property value from properties file|
 |`@Resource`|JSR-250 injection by name|
-|`@Required`|Marks a required property (legacy, rarely used)|
+|`@Required`|Marks a required property (legacy, rarely used)|Deprecated used now @Primary
 
 ---
 
