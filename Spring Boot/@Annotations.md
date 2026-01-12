@@ -487,13 +487,13 @@ Think of it as a **global controller “interceptor” for cross-cutting concern
 
 # **2. Common Annotations Used with JWT**
 
-|Annotation|Purpose|
-|---|---|
-|`@PreAuthorize("hasRole('ADMIN')")`|Protect method by role, works if JWT contains roles|
-|`@PostAuthorize("returnObject.owner == authentication.name")`|Access check after method execution|
-|`@Secured("ROLE_USER")`|Role-based method security|
-|`@AuthenticationPrincipal`|Inject currently authenticated user (from JWT) into method|
-|`@EnableWebSecurity`|Enable Spring Security config (needed for JWT)|
+| Annotation                                                    | Purpose                                                    |
+| ------------------------------------------------------------- | ---------------------------------------------------------- |
+| `@PreAuthorize("hasRole('ADMIN')")`                           | Protect method by role, works if JWT contains roles        |
+| `@PostAuthorize("returnObject.owner == authentication.name")` | Access check after method execution                        |
+| `@Secured("ROLE_USER")`                                       | Role-based method security                                 |
+| `@AuthenticationPrincipal`                                    | Inject currently authenticated user (from JWT) into method |
+| `@EnableWebSecurity`                                          | Enable Spring Security config (needed for JWT)             |
 
 ---
 
