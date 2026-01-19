@@ -332,3 +332,164 @@ Advanced: custom parallel sorting using ForkJoinPool.
 - Multi-field sorting uses `.thenComparing(...)`
   
 ```
+
+
+_proactice_
+## 🎯 Goal of This Practice
+
+You will practice sorting:
+
+- `ArrayList`
+    
+- `List`
+    
+- `Map`
+    
+- Using **Streams**
+    
+- By **id**, **name**, **price**, **quantity**, etc.
+    
+
+---
+
+## 📦 1️⃣ Create a Model Class
+
+```java
+public class Product {
+
+    private int id;
+    private String name;
+    private double price;
+    private int quantity;
+
+    public Product(int id, String name, double price, int quantity) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    // Getters only (no setters for now)
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                '}';
+    }
+}
+
+```
+
+---
+
+## 🏗️ 2️⃣ Create a Test Class and Fill Constructor with 10 Objects
+
+```java
+import java.util.*;
+
+public class SortPractice {
+
+    private List<Product> products;
+
+    public SortPractice() {
+        products = new ArrayList<>();
+
+        products.add(new Product(5, "Laptop", 1200.50, 10));
+        products.add(new Product(2, "Mouse", 25.99, 100));
+        products.add(new Product(8, "Keyboard", 75.49, 50));
+        products.add(new Product(1, "Monitor", 300.00, 20));
+        products.add(new Product(10, "USB Cable", 9.99, 200));
+        products.add(new Product(3, "Webcam", 89.99, 15));
+        products.add(new Product(6, "Headphones", 199.99, 30));
+        products.add(new Product(4, "Chair", 150.00, 5));
+        products.add(new Product(9, "Desk", 450.00, 3));
+        products.add(new Product(7, "Microphone", 129.99, 12));
+    }
+
+    public static void main(String[] args) {
+        SortPractice sp = new SortPractice();
+
+        // Print original list
+        sp.products.forEach(System.out::println);
+    }
+}
+
+```
+
+---
+
+## 🧠 3️⃣ Practice Tasks (DO NOT CODE YET)
+
+Try these **one by one** 👇  
+(Ask me when you get stuck)
+
+### 🔹 List / ArrayList
+
+1. Sort by `id` ascending
+    
+2. Sort by `id` descending
+    
+3. Sort by `price`
+    
+4. Sort by `name` (A → Z)
+    
+5. Sort by `quantity` descending
+    
+
+---
+
+### 🔹 Stream Sorting
+
+6. Use `stream()` to sort by price
+    
+7. Use `stream()` to sort by name length
+    
+8. Sort by **price then quantity**
+    
+
+---
+
+### 🔹 Map Sorting
+
+Convert to map:
+
+- `Map<Integer, Product>` (id → product)
+    
+- `Map<String, Product>` (name → product)
+    
+
+Then:  
+9. Sort map by key  
+10. Sort map by product price  
+11. Sort map by quantity descending
+
+---
+
+### 🔹 Bonus (Advanced)
+
+12. Sort using **custom Comparator class**
+    
+13. Sort using **lambda**
+    
+14. Sort using **Comparator.comparing**
+    
+15. Sort and collect into a **new list**

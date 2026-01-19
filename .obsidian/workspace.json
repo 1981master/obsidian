@@ -56,16 +56,30 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "React/Practice steps.md",
+                "file": "JAVA/Queue.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Practice steps"
+              "title": "Queue"
+            }
+          },
+          {
+            "id": "a6c2f4f1c5065ee7",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Spring Boot/Interview Questions.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Interview Questions"
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       }
     ],
     "direction": "vertical"
@@ -229,10 +243,15 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "40c980a6d174cc2f",
+  "active": "a6c2f4f1c5065ee7",
   "lastOpenFiles": [
-    "Python/Database Connection.md",
+    "Spring Boot/Basics.md",
+    "Spring Boot/@Annotations.md",
+    "JAVA/Sorting.md",
+    "JAVA/Maps.md",
+    "JAVA/Queue.md",
     "React/Practice steps.md",
+    "Python/Database Connection.md",
     "Python/Backend.md",
     "Practice/90 Days Advance.md",
     "Python",
@@ -240,7 +259,6 @@
     "Practice/15 minutes daily planning.md",
     "Practice/15 Minutes Daily Practice.md",
     "Practice/Planning.md",
-    "Spring Boot/@Annotations.md",
     "Practice",
     "Untitled 1.base",
     "Untitled.base",
@@ -258,15 +276,11 @@
     "Math",
     "README.md",
     "Spring Boot/Interview Questions.md",
-    "Spring Boot/Basics.md",
     "Spring Boot/JPA & Transactions & HQL.md",
     "Database/Relational/SQL/Interview Questions.md",
     "Spring Boot",
     "Database/Relational/SQL/Queries.md",
-    "Vuejs/Basics.md",
-    "React/Baseics.md",
     "React",
-    "Database/Relational/SQL/Sub Query.md",
     "Schema Test.canvas"
   ]
 }

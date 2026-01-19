@@ -456,6 +456,19 @@ public class MapInterviewExamples {
         return new TreeMap<>(map);
     }
 
+- use Iterator on Map: we need to use Map.Entry which it give us entry for each key value in the  map.:
+  Map<String, Integer> map = new HashMap<>();
+map.put("x", 10);
+map.put("y", 20);
+
+// Using Iterator on entry set
+Iterator<Map.Entry<String, Integer>> it = map.entrySet().iterator();
+while (it.hasNext()) {
+    Map.Entry<String, Integer> entry = it.next();
+    System.out.println(entry.getKey() + " -> " + entry.getValue());
+}
+
+
     // 18. Sort a Map by values (ascending)
     public static <K, V extends Comparable<? super V>> Map<K, V> q18_sortByValue(Map<K, V> map) {
         return map.entrySet().stream()
