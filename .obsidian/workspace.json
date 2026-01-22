@@ -70,12 +70,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Spring Boot/Interview Questions.md",
+                "file": "Redux/Redux and Tool Kits.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Interview Questions"
+              "title": "Redux and Tool Kits"
             }
           }
         ],
@@ -245,6 +245,16 @@
   },
   "active": "a6c2f4f1c5065ee7",
   "lastOpenFiles": [
+    "JAVA & Javascript/JSON.md",
+    "Redux/Redux and Tool Kits.md",
+    "JAVA & Javascript/Array Access.md",
+    "JAVA & Javascript/Object Access.md",
+    "JAVA & Javascript/Roles.md",
+    "JAVA & Javascript/Data Structure.md",
+    "JAVA & Javascript/Strings.md",
+    "JAVA & Javascript/Java Vs Javascript.md",
+    "Spring Boot/Interview Questions.md",
+    "JAVA & Javascript",
     "Spring Boot/Basics.md",
     "Spring Boot/@Annotations.md",
     "JAVA/Sorting.md",
@@ -267,20 +277,10 @@
     "Javascript/DOM.md",
     "Redux",
     "Javascript/Document.md",
-    "Javascript/Window.md",
-    "React/Name Best Practice.md",
-    "HTML/Basics.md",
     "Javascript",
-    "Math/Math Road Map.md",
     "HTML",
     "Math",
-    "README.md",
-    "Spring Boot/Interview Questions.md",
-    "Spring Boot/JPA & Transactions & HQL.md",
-    "Database/Relational/SQL/Interview Questions.md",
     "Spring Boot",
-    "Database/Relational/SQL/Queries.md",
-    "React",
     "Schema Test.canvas"
   ]
 }
