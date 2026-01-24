@@ -1,11 +1,3 @@
-[Skip to content](https://chatgpt.com/c/6973e355-610c-8333-b873-719f88153ab8#main)
-
-## Chat history
-
-[](https://chatgpt.com/)
-
-##### You said:
-
 how do you make class immutable java
 
 ###### ChatGPT said:

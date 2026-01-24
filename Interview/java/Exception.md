@@ -1,11 +1,3 @@
-[Skip to content](https://chatgpt.com/c/6973e460-4198-8325-8ec8-f96ee6b4a3ab#main)
-
-## Chat history
-
-[](https://chatgpt.com/)
-
-##### You said:
-
 checked vs un checked exceptions java
 
 ###### ChatGPT said:
