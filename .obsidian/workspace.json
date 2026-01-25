@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Interview/java/Interview Questions.md",
+                "file": "MD/Markup.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Interview Questions"
+              "title": "Markup"
             }
           }
         ]
@@ -188,8 +188,16 @@
   },
   "active": "1c82035713f1ed81",
   "lastOpenFiles": [
+    "Kafka/Kafka Fails.md",
+    "MD/Markup.md",
+    "MD",
+    "Kafka/Basics.md",
+    "Interview/Bank interview2.md",
+    "Kafka",
+    "Interview/SpringBoot.md",
+    "Interview/Bank interview.md",
+    "Interview/java/+.md",
     "Interview/java/Fail Fast and Safe.md",
-    "Interview/java/Interview Questions.md",
     "Interview/JSON.md",
     "Interview/java/Immutable Class Java.md",
     "Interview/java/Exception.md",
@@ -212,18 +220,10 @@
     "JAVA & Javascript/Roles.md",
     "JAVA & Javascript/Data Structure.md",
     "JAVA & Javascript/Strings.md",
-    "JAVA & Javascript/Java Vs Javascript.md",
-    "Spring Boot/Interview Questions.md",
     "JAVA & Javascript",
-    "Spring Boot/Basics.md",
-    "Spring Boot/@Annotations.md",
-    "JAVA/Sorting.md",
-    "JAVA/Maps.md",
     "Python",
     "Practice",
     "Untitled 1.base",
-    "Untitled.base",
-    "Redux",
     "Schema Test.canvas"
   ]
 }
