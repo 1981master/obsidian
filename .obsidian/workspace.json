@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Git/Basics.md",
+                "file": "JAVA/code/Some.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Basics"
+              "title": "Some"
             }
           }
         ]
@@ -188,8 +188,24 @@
   },
   "active": "8b2b7487bcc40772",
   "lastOpenFiles": [
-    "Untitled.base",
+    "JAVA/convert/String to char-char[].md",
+    "JAVA/code/Some.md",
+    "JAVA/code",
+    "JAVA/convert/char to string and char value.md",
+    "JAVA/convert/char and char[] to srting.md",
+    "JAVA/convert/Charseqeuence to string.md",
+    "JAVA/Arrays Methods.md",
+    "JAVA/convert",
+    "JAVA/Arrays.md",
+    "JAVA/Array of String.md",
+    "Git/Rebase.md",
+    "Javascript/HOF.md",
+    "React/Context.md",
+    "React/useMemo/Basics.md",
+    "React/useRef/General.md",
+    "React/useRef/Basics.md",
     "Git/Basics.md",
+    "Untitled.base",
     "Untitled 1.base",
     "Spring Boot/questions/Normal Bean(POJO) Vs Springboot Bean.md",
     "Git",
@@ -197,32 +213,17 @@
     "Spring Boot/questions/what is context negotiations.md",
     "React/useCallback/Basics.md",
     "Spring Boot/questions",
-    "React/useMemo/Basics.md",
     "React/useEffect & useLayoutEffect/Basics.md",
     "React/useCallback",
     "React/useMemo",
     "React/useEffect & useLayoutEffect",
     "React/Untitled.md",
-    "React/useRef/General.md",
-    "React/useRef/Basics.md",
-    "React/Context.md",
     "React/useRef",
     "MD/Markup.md",
     "Kafka/Kafka Fails.md",
-    "MD",
     "Kafka/Basics.md",
     "Interview/Bank interview2.md",
-    "Kafka",
     "Interview/SpringBoot.md",
-    "Interview/Bank interview.md",
-    "Interview/java/+.md",
-    "Interview/java/Fail Fast and Safe.md",
-    "Interview/JSON.md",
-    "Interview/java/Immutable Class Java.md",
-    "Interview/java/Exception.md",
-    "Interview/springboot/Transactional.md",
-    "Interview/JPA/Lazy Vs Eagar Fetching.md",
-    "Interview/springboot/Circular Dependancy.md",
     "Schema Test.canvas"
   ]
 }
