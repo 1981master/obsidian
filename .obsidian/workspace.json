@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "6c6cc788cdba3351",
+        "id": "7ec0c37a807ecec7",
         "type": "tabs",
         "children": [
           {
-            "id": "1c82035713f1ed81",
+            "id": "8b2b7487bcc40772",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "MD/Markup.md",
+                "file": "Git/Basics.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Markup"
+              "title": "Basics"
             }
           }
         ]
@@ -186,10 +186,29 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "1c82035713f1ed81",
+  "active": "8b2b7487bcc40772",
   "lastOpenFiles": [
-    "Kafka/Kafka Fails.md",
+    "Untitled.base",
+    "Git/Basics.md",
+    "Untitled 1.base",
+    "Spring Boot/questions/Normal Bean(POJO) Vs Springboot Bean.md",
+    "Git",
+    "JAVA/Thread.md",
+    "Spring Boot/questions/what is context negotiations.md",
+    "React/useCallback/Basics.md",
+    "Spring Boot/questions",
+    "React/useMemo/Basics.md",
+    "React/useEffect & useLayoutEffect/Basics.md",
+    "React/useCallback",
+    "React/useMemo",
+    "React/useEffect & useLayoutEffect",
+    "React/Untitled.md",
+    "React/useRef/General.md",
+    "React/useRef/Basics.md",
+    "React/Context.md",
+    "React/useRef",
     "MD/Markup.md",
+    "Kafka/Kafka Fails.md",
     "MD",
     "Kafka/Basics.md",
     "Interview/Bank interview2.md",
@@ -203,27 +222,7 @@
     "Interview/java/Exception.md",
     "Interview/springboot/Transactional.md",
     "Interview/JPA/Lazy Vs Eagar Fetching.md",
-    "Interview/JPA",
     "Interview/springboot/Circular Dependancy.md",
-    "Interview/springboot/Authentication & Authorization.md",
-    "Interview/springboot/starters and profile.md",
-    "Interview/springboot/configurations and base packages.md",
-    "Interview/springboot/Bean life cycle.md",
-    "Interview/springboot",
-    "Interview/java",
-    "Interview/java/Java Coding.md",
-    "Interview",
-    "JAVA & Javascript/JSON.md",
-    "Redux/Redux and Tool Kits.md",
-    "JAVA & Javascript/Array Access.md",
-    "JAVA & Javascript/Object Access.md",
-    "JAVA & Javascript/Roles.md",
-    "JAVA & Javascript/Data Structure.md",
-    "JAVA & Javascript/Strings.md",
-    "JAVA & Javascript",
-    "Python",
-    "Practice",
-    "Untitled 1.base",
     "Schema Test.canvas"
   ]
 }
