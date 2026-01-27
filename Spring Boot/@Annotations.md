@@ -4,22 +4,64 @@
 
 ## **1. Core & Configuration Annotations**
 
-|Annotation|Description|
-|---|---|
-|`@SpringBootApplication`|Combines `@Configuration`, `@EnableAutoConfiguration`, `@ComponentScan`|
-|`@Configuration`|Marks a class as a source of bean definitions|
-|`@Bean`|Declares a bean method inside a `@Configuration` class|
-|`@ComponentScan`|Scans packages for components|
-|`@Import`|Imports additional configuration classes|
-|`@ImportResource`|Imports XML-based configuration|
-|`@ConditionalOnClass`|Auto-configure if a class is on the classpath|
-|`@ConditionalOnMissingBean`|Auto-configure only if bean is missing|
-|`@ConditionalOnProperty`|Configure bean based on property value|
-|`@ConditionalOnBean`|Configure bean only if another bean exists|
-|`@Profile`|Load bean only for a specific Spring profile|
-|`@Primary`|Marks a bean as primary when multiple beans exist|
-|`@Lazy`|Lazy initialization of bean|
+| Annotation                  | Description                                                                           |
+| --------------------------- | ------------------------------------------------------------------------------------- |
+| `@SpringBootApplication`    | Combines `@Configuration`, `@EnableAutoConfiguration`, `@ComponentScan`               |
+| `@Configuration`            | Marks a class as a source of bean definitions                                         |
+| `@Bean`                     | Declares a bean method inside a `@Configuration` class                                |
+| `@ComponentScan`            | Scans packages for components                                                         |
+| `@Import`                   | Imports additional configuration classes                                              |
+| `@ImportResource`           | Imports XML-based configuration                                                       |
+| `@ConditionalOnClass`       | Auto-configure if a class is on the classpath                                         |
+| `@ConditionalOnMissingBean` | Auto-configure only if bean is missing                                                |
+| `@ConditionalOnProperty`    | Configure bean based on property value                                                |
+| `@ConditionalOnBean`        | Configure bean only if another bean exists                                            |
+| `@Profile`                  | Load bean only for a specific Spring profile                                          |
+| `@Primary`                  | Marks a bean as primary when multiple beans exist                                     |
+| `@Lazy`                     | Lazy initialization of bean                                                           |
+| `@scpe`                     | change the default singleton to like prototype: create new instance for each request. |
+```java
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
+@Configuration
+@PropertySource("classpath:custom.properties")
+public class AppConfig {
+    // Beans and configuration here
+}
+
+```
+```java
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+@Component
+@ConfigurationProperties(prefix = "app")
+public class AppProperties {
+
+    private String name;//this must be in app.name
+    private int version;//this must be in app.version
+
+    // Getters and setters
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+}
+
+```
 ---
 
 ## **2. Stereotype / Component Annotations**

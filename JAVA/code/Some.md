@@ -143,3 +143,57 @@ public class StringCharProblems {
 }
 
 ```
+
+`count: string:aabbccaa output: a2b2c2a2 incude imojis`
+```java
+public static String encode(String input) {
+
+    // 1️⃣ Handle null or empty input
+    if (input == null || input.isEmpty()) {
+        return "";
+    }
+
+    // 2️⃣ This will build the final compressed result
+    StringBuilder sb = new StringBuilder();
+
+    // 3️⃣ Stores the previous Unicode code point we saw
+    //    - int is used because emoji cannot fit in a char
+    int prev = -1;
+
+    // 4️⃣ Counts how many times the current character repeats consecutively
+    int count = 0;
+
+    // 5️⃣ Iterate through the string using Unicode code points
+    //    This is CRITICAL for emoji safety
+    for (int cp : input.codePoints().toArray()) {
+
+        // 6️⃣ If current code point is same as previous one,
+        //    increase the consecutive count
+        if (cp == prev) {
+            count++;
+        } else {
+
+            // 7️⃣ Character changed:
+            //    append the previous character and its count
+            //    (skip this on the very first iteration)
+            if (prev != -1) {
+                sb.append(new String(Character.toChars(prev)))
+                  .append(count);
+            }
+
+            // 8️⃣ Start tracking the new character
+            prev = cp;
+            count = 1;
+        }
+    }
+
+    // 9️⃣ After the loop, the last character group
+    //    is NOT yet appended, so we must add it here
+    sb.append(new String(Character.toChars(prev)))
+      .append(count);
+
+    // 🔟 Return the compressed result
+    return sb.toString();
+}
+
+```
