@@ -1,4 +1,3 @@
-
 Spring Data JPA is one of the most powerful and commonly used modules in the Spring ecosystem. It simplifies interacting with relational databases by reducing boilerplate code and letting developers focus on business logic instead of SQL.
 
 Here is a clean, complete explanation:
@@ -135,7 +134,14 @@ Many-to-One:
 
 Many-to-Many:
 
-`@ManyToMany @JoinTable(         name = "student_course",         joinColumns = @JoinColumn(name = "student_id"),         inverseJoinColumns = @JoinColumn(name = "course_id")) private List<Course> courses;`
+```java
+@ManyToMany 
+@JoinTable(        
+name = "student_course",         
+joinColumns = @JoinColumn(name = "student_id"),        
+inverseJoinColumns = @JoinColumn(name = "course_id")) 
+private List<Course> courses;
+```
 
 ---
 
@@ -143,7 +149,20 @@ Many-to-Many:
 
 Automatically track created/updated timestamps:
 
-`@EnableJpaAuditing public class AppConfig {}  @Entity @EntityListeners(AuditingEntityListener.class) public class User {     @CreatedDate     private LocalDateTime createdAt;      @LastModifiedDate     private LocalDateTime updatedAt; }`
+```java
+@EnableJpaAuditing 
+public class AppConfig {}  
+@Entity 
+@EntityListeners(AuditingEntityListener.class) 
+public class User {  
+   
+	@CreatedDate     
+	private LocalDateTime createdAt;      
+	@LastModifiedDate     
+	private LocalDateTime updatedAt;
+	
+}
+```
 
 ---
 
@@ -151,7 +170,12 @@ Automatically track created/updated timestamps:
 
 Spring can manage transactions automatically:
 
-`@Transactional public void createUser(User u) {     userRepository.save(u); }`
+```java
+@Transactional
+public void createUser(User u) {
+     userRepository.save(u);
+}
+```
 
 ---
 
@@ -319,13 +343,88 @@ Let’s implement a simple **User Management Module**.
 
 ## 📌 **Service**
 
-`@Service public class UserService {      @Autowired     private UserRepository repo;      public User save(User user) {         return repo.save(user);     }      public List<User> getAll() {         return repo.findAll();     }      public User getById(Long id) {         return repo.findById(id)                 .orElseThrow(() -> new RuntimeException("User not found"));     }      public User update(Long id, User updated) {         User existing = getById(id);         existing.setName(updated.getName());         existing.setEmail(updated.getEmail());         existing.setAge(updated.getAge());         return repo.save(existing);     }      public void delete(Long id) {         repo.deleteById(id);     } }`
+```java
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository repo;
+
+    public User create(User user) {
+        return repo.save(user);
+    }
+
+    public List<User> getAll() {
+        return repo.findAll();
+    }
+
+    public User getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public User update(Long id, User updated) {
+
+	    if (!repo.existsById(id)) {
+	        throw new RuntimeException("User not found with id: " + id);
+	    }
+	
+	    User existing = repo.findById(id).get();
+	
+	    existing.setName(updated.getName());
+	    existing.setEmail(updated.getEmail());
+	    existing.setAge(updated.getAge());
+	
+	    return repo.save(existing);
+	}
+
+
+    public void delete(Long id) {
+        repo.deleteById(id);
+    }
+}
+
+```
 
 ---
 
 ## 📌 **Controller**
 
-`@RestController @RequestMapping("/api/users") public class UserController {      @Autowired     private UserService service;      @PostMapping     public User create(@RequestBody User user) {         return service.save(user);     }      @GetMapping     public List<User> getAll() {         return service.getAll();     }      @GetMapping("/{id}")     public User getById(@PathVariable Long id) {         return service.getById(id);     }      @PutMapping("/{id}")     public User update(@PathVariable Long id, @RequestBody User user) {         return service.update(id, user);     }      @DeleteMapping("/{id}")     public void delete(@PathVariable Long id) {         service.delete(id);     } }`
+```java
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    @Autowired
+    private UserService service;
+
+    @PostMapping
+    public User create(@RequestBody User user) {
+        return service.create(user);
+    }
+
+    @GetMapping
+    public List<User> getAll() {
+        return service.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public User getById(@PathVariable Long id) {
+        return service.getById(id);
+    }
+
+    @PutMapping("/{id}")
+    public User update(@PathVariable Long id, @RequestBody User user) {
+        return service.update(id, user);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
+    }
+}
+
+```
 
 ---
 
@@ -381,6 +480,132 @@ Example:
 
 `List<User> findTop10ByAgeLessThanOrderByNameAsc(int age);`
 
+
+---
+## 1️⃣ General structure (ORDER MATTERS)
+
+```test
+find | read | get
+[Top | First][Number]
+By
+<Condition1>[And|Or<Condition2>...]
+[OrderBy<Field><Asc|Desc>]
+
+```
+
+---
+
+## 2️⃣ Valid keywords (must be exact)
+
+### 🔹 Limit
+
+`findTop10By... findFirst5By...`
+
+---
+
+### 🔹 Conditions (field-based)
+
+`ByAgeLessThan ByNameContaining ByCreatedByLessThan`
+
+Supported operators (common ones):
+```
+Is / Equals
+LessThan / LessThanEqual
+GreaterThan / GreaterThanEqual
+Between
+In / NotIn
+Like / Containing / StartingWith / EndingWith
+IsNull / IsNotNull
+True / False
+
+```
+
+---
+
+### 🔹 Logical chaining
+
+`And Or`
+
+Example:
+
+`ByAgeLessThanAndStatusEquals`
+
+---
+
+### 🔹 Sorting (ALWAYS at the end)
+
+`OrderByNameAsc OrderByCreatedAtDesc`
+
+---
+
+## 3️⃣ Your example (❌ incorrect)
+
+`findTop10ByAgeLessThanOrderByNameAscByCreatedByLessThan`
+
+❌ **Problems**
+
+- `OrderBy` must be **last**
+    
+- You cannot have `By` after `OrderBy`
+    
+- Conditions must come **before** `OrderBy`
+    
+
+---
+
+## 4️⃣ Correct versions (✅)
+
+### ✔️ Multiple conditions + order
+
+`findTop10ByAgeLessThanAndCreatedByLessThanOrderByNameAsc`
+
+---
+
+### ✔️ With multiple order fields
+
+`findTop10ByAgeLessThanAndCreatedByLessThanOrderByNameAscCreatedAtDesc`
+
+---
+
+## 5️⃣ Method parameters MUST match order
+
+`List<User> findTop10ByAgeLessThanAndCreatedByLessThanOrderByNameAsc(     int age,     Long createdBy );`
+
+---
+
+## 6️⃣ Field names MUST match entity fields
+
+Entity:
+
+`private int age; private String name; private Long createdBy; private LocalDateTime createdAt;`
+
+Method:
+
+`ByAgeLessThan ✔ ByCreatedByLessThan ✔ OrderByNameAsc ✔`
+
+❌ `created_by`, `createdby`, `Created_By` → INVALID
+
+---
+
+## 7️⃣ When NOT to use chaining
+
+❌ Too complex:
+
+`findTop10ByAgeLessThanAndStatusInOrRoleNotAndNameStartingWith...`
+
+✅ Use:
+
+`@Query("SELECT u FROM User u WHERE ...")`
+
+---
+
+## 8️⃣ Quick cheat rules 🧠
+
+✔ `By` → **only once**  
+✔ Conditions → **before OrderBy**  
+✔ `OrderBy` → **last**  
+✔ Entity field names → **exact match**  
+✔ Method params → **same order as conditions**
 ---
 
 ### Behind the scenes, Spring does this:
@@ -395,6 +620,389 @@ Example:
     
 
 This is why method naming is powerful.
+
+---
+Pagable
+```java
+public List<User> getTopUsers(int age, int limit) {
+    return repo.findByAgeLessThan(
+            age,
+            PageRequest.of(0, limit, Sort.by("createdAt").descending())
+    );
+}
+
+```
+
+`Never use Pabable and sort in same args allways use Pagable and pass sortby as last params into pagable`
+
+so pagable can go to the second args in each JPA metod PageRequest.of(0, limit, Sort.by("createdAt").descending())
+
+Yes ✅ — **`Pageable` can be the last parameter of (almost) any Spring Data JPA repository method**.
+
+### ✅ Correct rule
+
+> **`Pageable` MUST be the last argument** in the repository method signature.
+
+---
+
+## ✔️ Correct examples
+
+`List<User> findByAgeLessThan(int age, Pageable pageable);`
+
+`Page<User> findByStatusAndRole(String status, String role, Pageable pageable);`
+
+`List<User> findByCreatedAtAfter(LocalDateTime date, Pageable pageable);`
+
+---
+
+## ❌ Incorrect examples
+
+`List<User> findByAgeLessThan(Pageable pageable, int age); // ❌`
+
+`List<User> findByAgeLessThan(int age, Pageable pageable, Sort sort); // ❌`
+
+---
+
+## ⚠️ `Sort` vs `Pageable`
+
+### ✔ `Sort` alone (also last)
+
+`List<User> findByAgeLessThan(int age, Sort sort);`
+
+### ❌ Cannot combine both
+
+`findByAgeLessThan(int age, Pageable pageable, Sort sort); // ❌`
+
+👉 `Pageable` **already contains sorting**.
+
+---
+
+## 🧠 Why it must be last
+
+Spring Data parses method parameters in order:
+
+1. Query parameters
+    
+2. **Special parameters** (`Pageable`, `Sort`)
+    
+
+If `Pageable` isn’t last → parser fails.
+
+---
+
+## ✅ Your usage is 100% correct
+
+`repo.findByAgeLessThan(     age,     PageRequest.of(0, limit, Sort.by("createdAt").descending()) );`
+
+✔ Dynamic TOP  
+✔ Dynamic ORDER  
+✔ Clean JPA
+
+---
+
+## 🔑 Quick rules cheat
+
+✔ `Pageable` → last  
+✔ `Sort` → last (if no Pageable)  
+❌ Never both together  
+✔ Works with `findBy`, `@Query`, `Specification`
+
+---
+
+If you want next:
+
+- `Pageable` vs `Slice`
+    
+- Cursor pagination
+    
+- Performance pitfalls (count query)
+    
+- SQL generated by JPA
+    
+
+so to compaine both of them we need to pass sortby as last args for pagable
+
+Yes — **exactly** ✅  
+To **combine pagination + sorting**, you **put `Sort` _inside_ `Pageable`**, not as a separate argument.
+
+---
+
+## ✅ Correct way (ONLY way)
+
+```java
+Pageable pageable =
+        PageRequest.of(
+            page,                    // page number
+            size,                    // limit
+            Sort.by("createdAt").descending()
+        );
+
+Then:
+repo.findByAgeLessThan(age, pageable);
+```
+
+---
+```java
+public List<User> getUsersByAge(
+        int age,
+        int page,
+        int size
+) {
+    return repo.findByAgeLessThan(
+            age,
+            PageRequest.of(
+                    page,
+                    size,
+                    Sort.by("createdAt").descending()
+            )
+    );
+}
+
+```
+### ✔ Matching repository method
+
+`List<User> findByAgeLessThan(int age, Pageable pageable);`
+
+---
+<mark>Slice</makr>
+## 1️⃣ What is Slice?
+
+- `Slice<T>` represents a **subset of data** for a single “page.”
+    
+- Unlike `Page<T>`, it **does NOT run a `COUNT(*)` query** to calculate total pages.
+    
+- It **knows if there’s a next slice** (`hasNext()`), so UI can implement “Load more” or infinite scroll efficiently.
+    
+
+---
+
+## 2️⃣ Main differences: `Slice` vs `Page`
+
+|Feature|Page<T>|Slice<T>|
+|---|---|---|
+|total pages|✅ yes (`getTotalPages()`)|❌ no|
+|total elements|✅ yes (`getTotalElements()`)|❌ no|
+|content access|✅ `getContent()`|✅ `getContent()`|
+|has next page|✅ `hasNext()`|✅ `hasNext()`|
+|query performance|❌ extra count query|✅ no extra query|
+|ideal for|Standard pagination|Infinite scroll / large data|
+
+---
+
+## 3️⃣ Repository method example
+
+`Slice<User> findByAgeLessThan(int age, Pageable pageable);`
+
+---
+
+## 4️⃣ Service example
+
+```java
+public Slice<User> getUsersByAgeSlice(int age, int page, int size) {
+    Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+    return repo.findByAgeLessThan(age, pageable);
+}
+
+```
+
+---
+
+## 5️⃣ Controller example
+
+```java
+@GetMapping("/users")
+public Slice<User> getUsers(
+        @RequestParam int age,
+        @RequestParam int page,
+        @RequestParam int size
+) {
+    return service.getUsersByAgeSlice(age, page, size);
+}
+
+```
+
+---
+
+## 6️⃣ UI usage
+
+- UI sends `page` and `size`.
+    
+- Backend returns **Slice**, which has:
+    
+   ```text
+    slice.getContent(); // actual rows 
+    slice.hasNext();    // true/false 
+    slice.getNumber();  // current page
+   ```
+    
+- UI can do **“Load more”** if `hasNext()` is true.
+    
+- No total pages needed.
+    
+
+---
+
+## 7️⃣ Key points
+
+- `Slice` is **faster for large tables** because it avoids `COUNT(*)`.
+    
+- Use for **infinite scrolling** or “Load more” buttons.
+    
+- If you need total pages for **page numbers**, use `Page`.
+    
+
+---
+
+If you want, I can make a **full example comparing Page vs Slice** with **UI “Next” button simulation** so you can see the difference in action.
+
+Do you want me to do that?
+
+  
+
+## 1️⃣ Do we still use `Pageable` with `Slice`?
+
+✅ **YES — syntax is the SAME**
+
+You still pass **`Pageable`** exactly like with `Page`.
+
+```java
+Page<User> page = repo.findByAgeLessThan(age, pageable);
+
+page.getTotalPages();
+page.getTotalElements();
+page.hasNext();
+page.getContent();
+
+```
+
+---
+
+## 2️⃣ What is `Slice` then?
+
+`Slice<T>` is **what you get back**, not what you pass in.
+
+`INPUT  → Pageable OUTPUT → Slice<User>`
+
+---
+
+## 3️⃣ `Slice` vs `Page` in code
+
+### Page
+
+`Page<User> page = repo.findByAgeLessThan(age, pageable);  page.getTotalPages(); page.getTotalElements(); page.hasNext(); page.getContent();`
+
+### Slice
+
+```java
+Slice<User> slice = repo.findByAgeLessThan(age, pageable);
+
+slice.hasNext();     // ✔
+slice.getContent();  // ✔
+slice.getNumber();   // ✔
+
+slice.getTotalPages();     // ❌ DOES NOT EXIST
+slice.getTotalElements();  // ❌ DOES NOT EXIST
+
+```
+
+---
+
+## 4️⃣ Why Slice is faster
+
+Spring Data internally:
+
+- Fetches **size + 1 rows**
+    
+- If extra row exists → `hasNext = true`
+    
+- Drops the extra row from the result
+    
+
+❌ No `COUNT(*)` query  
+✔ One single SELECT
+
+---
+
+## 5️⃣ Typical Slice use-case (infinite scroll)
+
+```java
+public Slice<User> loadMoreUsers(int page) {
+    return repo.findAll(
+        PageRequest.of(page, 10, Sort.by("createdAt").descending())
+    );
+}
+
+```
+
+UI:
+
+- Load page 0
+    
+- If `hasNext()` → load page 1
+    
+- Repeat until `hasNext() == false`
+    
+
+---
+
+## 6️⃣ Mental model (IMPORTANT)
+
+```text
+Pageable → how to fetch
+Slice    → what you fetched
+Page     → what you fetched + totals
+
+```
+
+---
+
+## 7️⃣ One-line rule to remember
+
+> **Pageable is always the argument**  
+> **Slice or Page is the return type**
+
+---
+
+```sql
+SELECT *
+FROM user
+WHERE age < ?
+ORDER BY created_at DESC
+LIMIT size OFFSET (page * size);
+
+```
+
+
+✔ Pagination  
+✔ Dynamic TOP  
+✔ Sorting  
+✔ One argument (`Pageable`)
+
+---
+
+## ❌ Incorrect ways
+
+`repo.findByAgeLessThan(age, pageable, sort); // ❌`
+
+`repo.findByAgeLessThan(age, Sort.by("createdAt")); // ❌ if Pageable exists`
+
+---
+
+## ✅ Alternative syntax (multiple sort fields)
+
+`Sort sort = Sort.by("name").ascending()                 .and(Sort.by("createdAt").descending());  Pageable pageable = PageRequest.of(page, size, sort);`
+
+---
+
+## 🧠 Rule summary (burn this in memory)
+
+`Pagination + Sorting → Pageable Sorting only          → Sort Pagination only       → Pageable`
+
+---
+
+## 🔑 One-liner rule
+
+> **If `Pageable` exists, `Sort` must live inside it**
 
 ---
 
@@ -2236,3 +2844,420 @@ If you want, I can also provide:
 🔥 **Senior-level JPA/Hibernate interview pack**
 
 ChatGPT can make mistakes. Check important info.
+
+
+---
+# 1️⃣ Cursor-based pagination vs Slice (OFFSET)
+
+## Slice (OFFSET-based)
+
+`SELECT * FROM users ORDER BY created_at DESC LIMIT 10 OFFSET 1000;`
+
+### Characteristics
+
+- Uses `OFFSET`
+    
+- Simple
+    
+- Page number based
+    
+- Can skip rows
+    
+
+### Pros
+
+✔ Easy to implement  
+✔ Works with `Pageable`  
+✔ Good for small datasets
+
+### Cons
+
+❌ Slows down as OFFSET grows  
+❌ Can miss/duplicate rows if data changes
+
+---
+
+## Cursor-based pagination (KEYSET pagination)
+
+`SELECT * FROM users WHERE created_at < :lastSeenCreatedAt ORDER BY created_at DESC LIMIT 10;`
+
+### Characteristics
+
+- No OFFSET
+    
+- Uses **last seen value** as cursor
+    
+- Stable ordering
+    
+
+### Pros
+
+✔ Extremely fast (uses index)  
+✔ No skipped rows  
+✔ Perfect for infinite scroll
+
+### Cons
+
+❌ No random page access  
+❌ Harder to implement  
+❌ Needs stable unique column
+
+---
+
+## When to use which
+
+|Scenario|Best choice|
+|---|---|
+|Page numbers|Page / Slice|
+|Infinite scroll|Slice|
+|Large datasets|Cursor|
+|Realtime feeds|Cursor|
+|Admin dashboards|Page|
+
+---
+
+# 2️⃣ Why OFFSET becomes slow (VERY IMPORTANT)
+
+### What DB actually does
+
+`OFFSET 100000`
+
+➡ DB must:
+
+1. Scan first **100,000 rows**
+    
+2. Discard them
+    
+3. Return next 10
+    
+
+Even with index:
+
+- Rows are still traversed
+    
+- Cost grows linearly
+    
+
+### Big-O intuition
+
+`OFFSET → O(n) Cursor → O(1)`
+
+---
+
+# 3️⃣ When NOT to use Slice ❌
+
+❌ When you need:
+
+- Total number of pages
+    
+- Total number of records
+    
+- Jump to page 50 directly
+    
+- Display page numbers
+    
+
+❌ When UI requires:
+
+`Page 1 | Page 2 | Page 3 | Page 4`
+
+Slice **cannot** provide this.
+
+---
+
+# 4️⃣ When NOT to use Page ❌
+
+❌ Large tables  
+❌ High traffic APIs  
+❌ Infinite scrolling feeds
+
+Reason:
+
+- `COUNT(*)` is expensive
+    
+- Runs on every request
+    
+
+---
+
+# 5️⃣ Spring Data pagination interview questions
+
+### Q1️⃣ Difference between Page and Slice?
+
+> Page runs a COUNT query, Slice doesn’t.
+
+---
+
+### Q2️⃣ Why Pageable page is 0-based?
+
+> Aligns with OFFSET calculation and internal paging.
+
+---
+
+### Q3️⃣ Why Pageable must be last parameter?
+
+> Spring Data parser expects query parameters first, special ones last.
+
+---
+
+### Q4️⃣ Can we combine Pageable and Sort?
+
+> No — Sort must be inside Pageable.
+
+---
+
+### Q5️⃣ How does Slice detect next page?
+
+> Fetches size + 1 records.
+
+---
+
+### Q6️⃣ How to improve pagination performance?
+
+> Use Slice or cursor-based pagination.
+
+---
+
+### Q7️⃣ What is keyset pagination?
+
+> Pagination using last seen column instead of OFFSET.
+
+---
+
+### Q8️⃣ Can Pageable be used with @Query?
+
+> Yes.
+
+---
+
+### Q9️⃣ What happens if sorting column is not indexed?
+
+> Pagination becomes slow even with small OFFSET.
+
+---
+
+### Q🔟 Pageable vs LIMIT in native SQL?
+
+> Pageable abstracts LIMIT/OFFSET and integrates sorting & counting.
+
+---
+
+# 6️⃣ Cursor pagination in Spring Data (example)
+
+`List<User> findTop10ByCreatedAtLessThanOrderByCreatedAtDesc(     LocalDateTime cursor );`
+
+Usage:
+
+`repo.findTop10ByCreatedAtLessThanOrderByCreatedAtDesc(lastSeenTime);`
+
+---
+
+# 7️⃣ Final decision table 🧠
+
+|Need|Use|
+|---|---|
+|Page numbers|Page|
+|Fast scrolling|Slice|
+|Massive data|Cursor|
+|Admin UI|Page|
+|Mobile feeds|Cursor|
+
+---
+Below is a **complete, production-style cursor (keyset) pagination implementation** in **Spring Data JPA** — **entity → repository → service → controller → UI flow**.
+
+No OFFSET. No COUNT. Fast and stable.
+
+---
+
+# 1️⃣ Entity (indexed cursor column)
+
+```java
+@Entity
+@Table(
+    name = "users",
+    indexes = {
+        @Index(name = "idx_users_created_at_id", columnList = "created_at,id")
+    }
+)
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    private Integer age;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    // getters / setters
+}
+
+```
+
+👉 **Composite index** ensures stability and speed.
+
+---
+
+# 2️⃣ Repository (cursor query)
+
+### Option A — Derived query (simple & clean)
+
+```java
+List<User> findTop10ByCreatedAtLessThanOrderByCreatedAtDesc(
+        LocalDateTime cursor
+);
+
+```
+
+---
+
+### Option B — Stable cursor (recommended)
+
+Handles equal timestamps safely.
+
+```java
+@Query("""
+    SELECT u FROM User u
+    WHERE (u.createdAt < :createdAt)
+       OR (u.createdAt = :createdAt AND u.id < :id)
+    ORDER BY u.createdAt DESC, u.id DESC
+""")
+List<User> findNextPage(
+        @Param("createdAt") LocalDateTime createdAt,
+        @Param("id") Long id,
+        Pageable pageable
+);
+
+```
+
+---
+
+# 3️⃣ Service layer
+
+```java
+public List<User> getUsersByCursor(
+        LocalDateTime createdAt,
+        Long lastId,
+        int size
+) {
+    Pageable pageable = PageRequest.of(0, size);
+
+    if (createdAt == null) {
+        return repo.findAll(
+            PageRequest.of(0, size, Sort.by("createdAt").descending())
+        ).getContent();
+    }
+
+    return repo.findNextPage(createdAt, lastId, pageable);
+}
+
+```
+
+---
+
+# 4️⃣ Controller
+
+```java
+@GetMapping("/users/cursor")
+public List<User> getUsersByCursor(
+        @RequestParam(required = false) LocalDateTime cursorCreatedAt,
+        @RequestParam(required = false) Long cursorId,
+        @RequestParam(defaultValue = "10") int size
+) {
+    return service.getUsersByCursor(cursorCreatedAt, cursorId, size);
+}
+
+```
+
+---
+
+# 5️⃣ API calls (UI)
+
+### First load
+
+`GET /users/cursor?size=10`
+
+Response:
+
+`[   { "id": 101, "createdAt": "2025-01-20T12:00:00" },   ... ]`
+
+Cursor to save:
+
+`lastCreatedAt = lastItem.createdAt lastId        = lastItem.id`
+
+---
+
+### Next page
+
+```text
+GET /users/cursor
+?cursorCreatedAt=2025-01-20T12:00:00
+&cursorId=92
+&size=10
+
+```
+
+---
+
+# 6️⃣ UI logic (pseudo)
+
+```javascript
+let cursor = null;
+
+function loadMore() {
+  fetch(`/users/cursor?size=10&cursorCreatedAt=${cursor?.createdAt}&cursorId=${cursor?.id}`)
+    .then(res => res.json())
+    .then(data => {
+        render(data);
+        if (data.length > 0) {
+            const last = data[data.length - 1];
+            cursor = { createdAt: last.createdAt, id: last.id };
+        }
+    });
+}
+
+```
+
+---
+
+# 7️⃣ SQL generated (conceptually)
+
+```sql
+SELECT *
+FROM users
+WHERE (created_at < ?)
+   OR (created_at = ? AND id < ?)
+ORDER BY created_at DESC, id DESC
+LIMIT 10;
+
+```
+
+🔥 Uses index  
+🔥 No OFFSET  
+🔥 O(1) pagination
+
+---
+
+# 8️⃣ When to use cursor pagination
+
+✔ Infinite scroll  
+✔ Mobile feeds  
+✔ High-traffic APIs  
+✔ Tables with millions of rows
+
+---
+
+# 9️⃣ When NOT to use cursor pagination
+
+❌ Page numbers  
+❌ Jump to page 20  
+❌ Admin dashboards
+
+---
+
+# 🔑 Final mental model
+
+`Page / Slice → OFFSET → simple but slow Cursor       → keyset → fast & scalable`

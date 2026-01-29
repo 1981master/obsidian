@@ -1,5 +1,5 @@
 
-concurrency vs sychronization vs thread
+concurrency vs synchronization vs thread
 
 ###### ChatGPT said:
 
