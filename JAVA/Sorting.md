@@ -281,7 +281,29 @@ Advanced: custom parallel sorting using ForkJoinPool.
   
   # **1. Sorting Map by Key**
 
-`Map<String, Integer> map = new HashMap<>(); map.put("Alice", 50); map.put("Bob", 30); map.put("Charlie", 40);  // Sort by key using Comparator.comparing Map<String, Integer> sortedByKey = map.entrySet()         .stream()         .sorted(Comparator.comparing(Map.Entry::getKey))         .collect(Collectors.toMap(                 Map.Entry::getKey,                 Map.Entry::getValue,                 (oldValue, newValue) -> oldValue, // merge function                 LinkedHashMap::new // preserves insertion order         ));  System.out.println(sortedByKey);`
+Map<String, Integer> map = new HashMap<>();
+
+map.put("Alice", 50);
+map.put("Bob", 30);
+map.put("Charlie", 40);
+
+// ==============================
+// Sort by key using Comparator
+// ==============================
+Map<String, Integer> sortedByKey =
+        map.entrySet()
+           .stream()
+           .sorted(Comparator.comparing(Map.Entry::getKey))
+           .collect(Collectors.toMap(
+                   Map.Entry::getKey,
+                   Map.Entry::getValue,
+                   (oldValue, newValue) -> oldValue, // merge function in case of 
+                   double key.
+                   LinkedHashMap::new                 // preserves insertion order
+           ));
+
+System.out.println(sortedByKey);
+
 
 ✅ Output:
 
@@ -291,7 +313,22 @@ Advanced: custom parallel sorting using ForkJoinPool.
 
 # **2. Sorting Map by Value**
 
-`Map<String, Integer> sortedByValue = map.entrySet()         .stream()         .sorted(Comparator.comparing(Map.Entry::getValue))         .collect(Collectors.toMap(                 Map.Entry::getKey,                 Map.Entry::getValue,                 (oldValue, newValue) -> oldValue,                 LinkedHashMap::new         ));  System.out.println(sortedByValue);`
+// ==============================
+// Sort Map by value (ascending)
+// ==============================
+Map<String, Integer> sortedByValue =
+        map.entrySet()
+           .stream()
+           .sorted(Comparator.comparing(Map.Entry::getValue))
+           .collect(Collectors.toMap(
+                   Map.Entry::getKey,
+                   Map.Entry::getValue,
+                   (oldValue, newValue) -> oldValue, // merge function
+                   LinkedHashMap::new                 // preserves order
+           ));
+
+System.out.println(sortedByValue);
+
 
 ✅ Output:
 
@@ -311,7 +348,25 @@ Advanced: custom parallel sorting using ForkJoinPool.
 
 # **4. Multi-level Sorting (by Value then Key)**
 
-`Map<String, Integer> sortedByValueThenKey = map.entrySet()         .stream()         .sorted(             Comparator.comparing(Map.Entry<String, Integer>::getValue)                       .thenComparing(Map.Entry::getKey)         )         .collect(Collectors.toMap(                 Map.Entry::getKey,                 Map.Entry::getValue,                 (oldValue, newValue) -> oldValue,                 LinkedHashMap::new         ));  System.out.println(sortedByValueThenKey);`
+// =======================================
+// Sort Map by value, then key (ascending)
+// =======================================
+Map<String, Integer> sortedByValueThenKey =
+        map.entrySet()
+           .stream()
+           .sorted(
+                   Comparator.comparing(Map.Entry<String, Integer>::getValue)
+                             .thenComparing(Map.Entry::getKey)
+           )
+           .collect(Collectors.toMap(
+                   Map.Entry::getKey,
+                   Map.Entry::getValue,
+                   (oldValue, newValue) -> oldValue, // merge function
+                   LinkedHashMap::new                 // preserves order
+           ));
+
+System.out.println(sortedByValueThenKey);
+
 
 ✅ Output:
 

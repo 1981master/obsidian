@@ -148,11 +148,64 @@ Auto-config configures DataSource automatically.
 
 ## 📌 Service
 
-`@Service public class ItemService {      @Autowired     private ItemRepository repo;      public List<Item> findAll() { return repo.findAll(); }     public Item save(Item item) { return repo.save(item); }     public Item find(Long id) { return repo.findById(id).orElse(null); }     public void delete(Long id) { repo.deleteById(id); } }`
+```java
+@Service
+public class ItemService {
+
+    @Autowired
+    private ItemRepository repo;
+
+    public List<Item> findAll() {
+        return repo.findAll();
+    }
+
+    public Item save(Item item) {
+        return repo.save(item);
+    }
+
+    public Item find(Long id) {
+        return repo.findById(id).orElse(null);
+    }
+
+    public void delete(Long id) {
+        repo.deleteById(id);
+    }
+}
+
+```
 
 ## 📌 Controller
 
-`@RestController @RequestMapping("/items") public class ItemController {      @Autowired     private ItemService service;      @GetMapping     public List<Item> all() { return service.findAll(); }      @PostMapping     public Item create(@RequestBody Item item) { return service.save(item); }      @GetMapping("/{id}")     public Item one(@PathVariable Long id) { return service.find(id); }      @DeleteMapping("/{id}")     public void delete(@PathVariable Long id) { service.delete(id); } }`
+```java
+@RestController
+@RequestMapping("/items")
+public class ItemController {
+
+    @Autowired
+    private ItemService service;
+
+    @GetMapping
+    public List<Item> all() {
+        return service.findAll();
+    }
+
+    @PostMapping
+    public Item create(@RequestBody Item item) {
+        return service.save(item);
+    }
+
+    @GetMapping("/{id}")
+    public Item one(@PathVariable Long id) {
+        return service.find(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
+    }
+}
+
+```
 
 ---
 
@@ -393,14 +446,206 @@ The **Bean Life Cycle** is the sequence of steps that Spring performs when:
 
 Here is the **full flow**:
 
-`1. Bean Instantiation (new) 2. Populate Properties (@Autowired injection) 3. BeanNameAware (if implemented) 4. BeanFactoryAware (if implemented) 5. ApplicationContextAware (if implemented) 6. PostProcessBeforeInitialization (BeanPostProcessor) 7. @PostConstruct (if exists) 8. InitializingBean.afterPropertiesSet() 9. init-method (if defined in @Bean) 10. PostProcessAfterInitialization (BeanPostProcessor) 11. Bean is Ready to Use -------------------------------------- 12. @PreDestroy (on shutdown) 13. DisposableBean.destroy() 14. destroy-method (in @Bean)`
+```java
+1. Bean Instantiation (new)
+2. Populate Properties (@Autowired injection)
+3. BeanNameAware (if implemented)
+4. BeanFactoryAware (if implemented)
+5. ApplicationContextAware (if implemented)
+6. PostProcessBeforeInitialization (BeanPostProcessor)
+7. @PostConstruct (if exists)
+8. InitializingBean.afterPropertiesSet()
+9. init-method (if defined in @Bean)
+10. PostProcessAfterInitialization (BeanPostProcessor)
+11. Bean is Ready to Use
+--------------------------------------
+12. @PreDestroy (on shutdown)
+13. DisposableBean.destroy()
+14. destroy-method (in @Bean)
+
+```
 
 ---
 
 # ⭐ **3. Bean Life Cycle Diagram**
 
-                 `┌──────────────────────────────┐                  │        Create Bean            │                  └───────────────┬──────────────┘                                  ▼                      Instantiate Bean (new)                                  ▼                     Dependency Injection (@Autowired)                                  ▼                   Aware Interfaces (BeanNameAware etc.)                                  ▼                   BeanPostProcessor Before Init                                  ▼                  @PostConstruct (annotation callback)                                  ▼             InitializingBean.afterPropertiesSet()                                  ▼                  Custom init-method (XML/@Bean)                                  ▼                 BeanPostProcessor After Init                                  ▼                    Bean is Ready for Use                                  ▼                ───────────────────────────────                    APPLICATION SHUTDOWN                ───────────────────────────────                                  ▼                          @PreDestroy                                  ▼                     DisposableBean.destroy()                                  ▼                Custom destroy-method (@Bean)`
+```text
+┌──────────────────────────────┐
+│        Create Bean           │
+└───────────────┬──────────────┘
+                ▼
+      Instantiate Bean (new)
+                ▼
+ Dependency Injection (@Autowired)
+                ▼
+ Aware Interfaces (BeanNameAware etc.)
+                ▼
+ BeanPostProcessor Before Init
+                ▼
+ @PostConstruct (annotation callback)
+                ▼
+ InitializingBean.afterPropertiesSet()
+                ▼
+ Custom init-method (XML/@Bean)
+                ▼
+ BeanPostProcessor After Init
+                ▼
+ Bean is Ready for Use
+                ▼
+───────────────────────────────
+       APPLICATION SHUTDOWN
+───────────────────────────────
+                ▼
+ @PreDestroy
+                ▼
+ DisposableBean.destroy()
+                ▼
+ Custom destroy-method (@Bean)
 
+```
+
+---
+
+## 🔹 Core Spring Injection Annotations
+
+### 1️⃣ `@Autowired`
+
+- By **type**
+    
+- Supports constructor, field, setter
+    
+- Optional: `@Autowired(required = false)`
+    
+
+---
+
+### 2️⃣ `@Qualifier`
+
+- Used **with** `@Autowired`
+    
+- Resolves ambiguity when multiple beans exist
+    
+
+```java
+@Autowired
+@Qualifier("itemService")
+private ItemService service;
+```
+
+---
+
+### 3️⃣ `@Primary`
+
+- Marks a **default bean**
+    
+- Used when multiple candidates exist
+    
+
+```java
+@Primary
+@Service public class 
+ItemServiceImpl implements ItemService {}
+```
+
+---
+
+## 🔹 JSR-250 / Jakarta Annotations (Standard)
+
+### 4️⃣ `@Resource`
+
+- By **name first**, then by type
+    
+- From `jakarta.annotation`
+    
+
+```java
+@Resource 
+private ItemService itemService;
+```
+
+---
+
+### 5️⃣ `@Inject`
+
+- From `jakarta.inject`
+    
+- By **type** (similar to `@Autowired`)
+    
+- No `required=false`
+    
+
+```java
+@Inject 
+private ItemService service;
+```
+
+---
+
+## 🔹 Constructor Injection (Recommended)
+
+### 6️⃣ Constructor Injection (No Annotation needed in Spring 4.3+)
+
+```java
+@Service 
+public class ItemService {
+      private final ItemRepository repo;
+      
+	  public ItemService(ItemRepository repo) {
+	           this.repo = repo;
+	  } 
+}
+```
+
+✔ Best for immutability  
+✔ Best for testing  
+✔ Official Spring recommendation
+
+---
+
+## 🔹 Optional / Advanced
+
+### 7️⃣ `@Lazy`
+
+- Delays bean creation
+    
+
+```java
+@Autowired 
+@Lazy 
+private ItemService service;
+```
+
+---
+
+### 8️⃣ `@Value`
+
+- Injects **primitive / config values**
+    
+
+```java
+@Value("${server.port}") 
+private int port;
+```
+
+---
+
+## 🔹 Quick Comparison Table
+
+|Annotation|Resolution|Source|
+|---|---|---|
+|`@Autowired`|by type|Spring|
+|`@Qualifier`|by name|Spring|
+|`@Primary`|default bean|Spring|
+|`@Resource`|name → type|Jakarta|
+|`@Inject`|by type|Jakarta|
+|Constructor|by type|Spring|
+
+---
+
+## 🔥 Interview Tip
+
+> **Best practice:** Use **constructor injection**  
+> Avoid field injection in production code.
 ---
 
 # ⭐ **4. Real Bean Life Cycle Example**
@@ -409,19 +654,106 @@ Let’s write a bean and print every lifecycle step.
 
 ## 📌 Step 1 — Create Bean Class
 
-`@Component public class MyBean implements          BeanNameAware,          BeanFactoryAware,          ApplicationContextAware,         InitializingBean,          DisposableBean {      public MyBean() {         System.out.println("1️⃣ Constructor - Bean Instantiated");     }      @Autowired     private SomeDependency dependency;      @Override     public void setBeanName(String name) {         System.out.println("2️⃣ BeanNameAware - Name: " + name);     }      @Override     public void setBeanFactory(BeanFactory beanFactory) {         System.out.println("3️⃣ BeanFactoryAware");     }      @Override     public void setApplicationContext(ApplicationContext context) {         System.out.println("4️⃣ ApplicationContextAware");     }      @PostConstruct     public void postConstruct() {         System.out.println("5️⃣ @PostConstruct");     }      @Override     public void afterPropertiesSet() {         System.out.println("6️⃣ InitializingBean.afterPropertiesSet()");     }      public void customInit() {         System.out.println("7️⃣ custom init-method");     }      @PreDestroy     public void preDestroy() {         System.out.println("8️⃣ @PreDestroy");     }      @Override     public void destroy() {         System.out.println("9️⃣ DisposableBean.destroy()");     }      public void customDestroy() {         System.out.println("🔟 custom destroy-method");     } }`
+```java
+@Component
+public class MyBean implements
+        BeanNameAware,
+        BeanFactoryAware,
+        ApplicationContextAware,
+        InitializingBean,
+        DisposableBean {
+
+    public MyBean() {
+        System.out.println("1️⃣ Constructor - Bean Instantiated");
+    }
+
+    @Autowired
+    private SomeDependency dependency;
+
+    @Override
+    public void setBeanName(String name) {
+        System.out.println("2️⃣ BeanNameAware - Name: " + name);
+    }
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) {
+        System.out.println("3️⃣ BeanFactoryAware");
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext context) {
+        System.out.println("4️⃣ ApplicationContextAware");
+    }
+
+    @PostConstruct
+    public void postConstruct() {
+        System.out.println("5️⃣ @PostConstruct");
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        System.out.println("6️⃣ InitializingBean.afterPropertiesSet()");
+    }
+
+    public void customInit() {
+        System.out.println("7️⃣ custom init-method");
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        System.out.println("8️⃣ @PreDestroy");
+    }
+
+    @Override
+    public void destroy() {
+        System.out.println("9️⃣ DisposableBean.destroy()");
+    }
+
+    public void customDestroy() {
+        System.out.println("🔟 custom destroy-method");
+    }
+}
+
+```
 
 ---
 
 ## 📌 Step 2 — Register Bean with init and destroy Methods
 
-`@Configuration public class Config {      @Bean(initMethod = "customInit", destroyMethod = "customDestroy")     public MyBean myBean() {         return new MyBean();     } }`
+```java
+@Configuration
+public class Config {
+
+    @Bean(initMethod = "customInit", destroyMethod = "customDestroy")
+    public MyBean myBean() {
+        return new MyBean();
+    }
+}
+
+```
 
 ---
 
 # ⭐ **5. Output Sequence**
 
-`1️⃣ Constructor - Bean Instantiated 2️⃣ BeanNameAware 3️⃣ BeanFactoryAware 4️⃣ ApplicationContextAware 5️⃣ @PostConstruct 6️⃣ InitializingBean.afterPropertiesSet() 7️⃣ custom init-method ----------------------------------- Application Running ----------------------------------- 8️⃣ @PreDestroy 9️⃣ DisposableBean.destroy() 🔟 custom destroy-method`
+```java
+1️⃣ Constructor - Bean Instantiated
+2️⃣ BeanNameAware
+3️⃣ BeanFactoryAware
+4️⃣ ApplicationContextAware
+5️⃣ @PostConstruct
+6️⃣ InitializingBean.afterPropertiesSet()
+7️⃣ custom init-method
+
+-----------------------------------
+        Application Running
+-----------------------------------
+
+8️⃣ @PreDestroy
+9️⃣ DisposableBean.destroy()
+🔟 custom destroy-method
+
+```
 
 This shows the **exact order**.
 
@@ -435,7 +767,24 @@ This shows the **exact order**.
 
 ### Example:
 
-`@Component public class MyProcessor implements BeanPostProcessor {      @Override     public Object postProcessBeforeInitialization(Object bean, String beanName) {         System.out.println("[BeforeInit] " + beanName);         return bean;     }      @Override     public Object postProcessAfterInitialization(Object bean, String beanName) {         System.out.println("[AfterInit] " + beanName);         return bean;     } }`
+```java
+@Component
+public class MyProcessor implements BeanPostProcessor {
+
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) {
+        System.out.println("[BeforeInit] " + beanName);
+        return bean;
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) {
+        System.out.println("[AfterInit] " + beanName);
+        return bean;
+    }
+}
+
+```
 
 This is widely used for:
 

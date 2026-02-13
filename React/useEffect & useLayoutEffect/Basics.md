@@ -107,7 +107,17 @@ Used for:
 
 ## Cleanup Function (Very Important in Interviews)
 
-`useEffect(() => {   const id = setInterval(() => {     console.log("Running...");   }, 1000);    return () => {     clearInterval(id);   }; }, []);`
+```javascript
+useEffect(() => {   
+	const id = setInterval(() => {    
+	    console.log("Running...");  
+	}, 1000);
+	    
+	return () => {     
+		clearInterval(id);   
+	}; 
+}, []);
+```
 
 ### Why cleanup?
 
@@ -133,7 +143,13 @@ Cleanup runs:
 
 ## Common Interview Example – API Call
 
-`useEffect(() => {   fetch("/api/users")     .then(res => res.json())     .then(data => setUsers(data)); }, []);`
+```javascript
+useEffect(() => {   
+	fetch("/api/users")     
+	.then(res => res.json())     
+	.then(data => setUsers(data)); 
+}, []);
+```
 
 ❗ Why `[]`?
 
@@ -146,24 +162,152 @@ Cleanup runs:
 
 ## Infinite Loop Trap (Very Common Interview Question)
 
-`useEffect(() => {   setCount(count + 1); }, [count]);`
+```javascript
+useEffect(() => {
+  setCount(count + 1);
+}, [count]);
+
+```
 
 ❌ Problem:
 
-- Effect updates `count`
+- ### What happens:
+
+1. Component renders
     
-- `count` change triggers effect again
+2. `count` changes
     
-- Infinite loop
+3. `useEffect` runs (because `[count]`)
     
+4. `setCount(count + 1)` updates state
+    
+5. State update → re-render
+    
+6. `count` changed again → effect runs again
+    
+7. 🔁 Infinite loop
+    
+Because we're updating something that is inside the dependency array.
 
 ✅ Fix:
 
 - Rethink logic
     
 - Use condition or functional update
-    
+- ```javascript
+  useEffect(() => {
+  if (count < 5) {// we need to count less than 5 just in this case.
+    setCount(prev => prev + 1);
+  }
+}, [count]);
 
+  ```
+
+```javascript
+/*
+========================================================
+REACT useEffect + setState SUMMARY
+========================================================
+
+1️⃣ Infinite Loop Happens When:
+- A value is in dependency array
+- You update that SAME value inside effect
+- The update always changes it
+
+❌ BAD (Infinite Loop)
+--------------------------------
+useEffect(() => {
+  setCount(count + 1);
+}, [count]);
+
+Why?
+Effect depends on count
+Effect updates count
+Update → re-render → effect runs again → forever
+
+
+2️⃣ Dependency Array Alone Does NOT Cause Loop
+--------------------------------
+✅ SAFE (Reading only)
+useEffect(() => {
+  console.log(count);
+}, [count]);
+
+
+3️⃣ Fetching Data on id Change (Correct Pattern)
+--------------------------------
+const [user, setUser] = useState(null);
+
+useEffect(() => {
+  fetch(`/api/user/${id}`)
+    .then(res => res.json())
+    .then(data => setUser(data));
+}, [id]);
+
+Safe because:
+Dependency = id
+We update user
+We do NOT update id
+
+
+4️⃣ setState Functional Update (Recommended)
+--------------------------------
+✅ Correct
+setCount(prev => prev + 1);
+
+❌ Wrong (no return)
+setCount(prev => { prev + 1 });
+
+
+5️⃣ Where You SHOULD Use setState
+--------------------------------
+✅ Event handler
+<button onClick={() => setCount(prev => prev + 1)} />
+
+✅ Inside useEffect (side effects)
+
+✅ Inside async functions
+
+
+6️⃣ Where You SHOULD NOT Use setState
+--------------------------------
+❌ Inside render body
+
+if (count < 5) {
+  setCount(count + 1); // causes re-render loop
+}
+
+React rendering must stay PURE.
+
+
+========================================================
+GOLDEN RULE
+========================================================
+
+Updating a dependency inside useEffect without control
+→ Infinite loop.
+
+Reading dependency → Safe.
+
+Functional update (prev => prev + 1)
+→ Use when new state depends on previous state.
+========================================================
+*/
+
+```
+# 🧠 The Real Rule
+
+An infinite loop happens when:
+
+1. `useEffect` depends on `X`
+    
+2. Inside the effect you update `X`
+    
+3. That update causes re-render
+    
+4. React sees `X` changed → runs effect again
+    
+5. Repeat forever 🔁
 ---
 
 ## Dependency Array Rules (ESLint Rule)

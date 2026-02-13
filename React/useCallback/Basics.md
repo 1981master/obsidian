@@ -137,7 +137,10 @@ export default function App() {
 - `useMemo(fn, deps)` memoizes **the result of a function**.
     
 
-`const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]); const memoizedFn = useCallback(() => doSomething(a, b), [a, b]);`
+```javascript
+const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]); 
+const memoizedFn = useCallback(() => doSomething(a, b), [a, b]);
+```
 
 ---
 

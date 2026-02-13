@@ -141,6 +141,79 @@ name = "student_course",
 joinColumns = @JoinColumn(name = "student_id"),        
 inverseJoinColumns = @JoinColumn(name = "course_id")) 
 private List<Course> courses;
+
+	// We need mapper on other side and best to have helpers
+import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+// ======================= USER =======================
+@Entity
+@Table(name = "users")
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String username;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "user_role",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
+```
+
+<mark> Important to have mapper on other side and helpers in both sides</mark>
+
+```java
+
+    // --------  helper methods --------
+    public void addRole(Role role) {
+        this.roles.add(role);
+        role.getUsers().add(this);
+    }
+
+    public void removeRole(Role role) {
+        this.roles.remove(role);
+        role.getUsers().remove(this);
+    }
+
+    // getters & setters
+}
+
+
+// ======================= ROLE =======================
+@Entity
+@Table(name = "roles")
+public class Role {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    private Set<User> users = new HashSet<>();
+
+    // -------- helper methods --------
+    public void addUser(User user) {
+        this.users.add(user);
+        user.getRoles().add(this);
+    }
+
+    public void removeUser(User user) {
+        this.users.remove(user);
+        user.getRoles().remove(this);
+    }
+
+    // getters & setters
+}
+
 ```
 
 ---
