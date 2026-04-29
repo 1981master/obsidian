@@ -20,15 +20,100 @@ axios.post(
 simple Reusable method. better at the end of this doc
 ```javascript
 function createUser({ url, body, params, headers }) {
+  // For return only params and headers below code, but if we need
   return axios.post(url, body, { params, headers });
 }
-
 createUser({
   url: "/users/42",
   body: { name: "Alice" },
   params: { filter: "active" },
-  headers: { token: "abc123" }
+  headers: {
+	Authorization: "Bearer abc123",
+	//can have many key values see code below.
+  }
 });
+
+//header object:
+instance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  },
+)
+//to pass more config we can do:
+  function createUser({ url, body, ...config }) {
+    return axios.post(url, body, config);
+  }
+//Now we can pass as many as we wont.
+createUser({
+  url: "/users/42",
+  body: { name: "Alice" },
+  params: { filter: "active" },
+  headers: { Authorization: "Bearer abc123",//can add more key value see below },
+  timeout: 5000,
+  withCredentials: true
+});
+
+------------------------------------------------------------------
+## ⚠️ Important notes
+
+- Header names are **case-insensitive**, but standard casing is preferred
+- Don’t send unnecessary headers — keep it minimal
+- Some headers (like `Host`, `Content-Length`) are automatically managed by the browser/Axios.
+  
+## 🧠 Simple rule of thumb
+
+You usually only need:
+
+- `Authorization` → for auth
+- `Content-Type` → for request body
+- `Accept` → for response format
+
+Everything else is **use-case specific**
+
+For used for **ETag caching**:
+
+- Client sends: `"If-None-Match": "etag-value"`
+- Server responds:
+    - `304 Not Modified` (if unchanged)
+    - or new data (if changed)
+
+👉 You usually don’t set this manually unless implementing caching logic.
+  
+createUser({
+  url: "/users/42",
+  body: { name: "Alice" },
+  params: { filter: "active" },
+  headers: {
+    Authorization: "Bearer abc123",
+    // Key must be a string because of the hyphen (-)
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    // ⚠️ Usually NOT set manually in browsers (handled automatically)
+    Cookie: "sessionId=xyz",
+    // ⚠️ Also controlled by browser in most cases (CORS-related)
+    Origin: "https://yourfrontend.com",
+    // Caching
+    "Cache-Control": "no-cache",
+    // ✅ Used for conditional requests (ETag-based caching)
+    "If-None-Match": "etag-value",
+    // Custom Headers (very common)
+    "X-Request-ID": "12345",
+    "X-API-Key": "my-api-key",
+    // Debugging / Metadata
+    // ⚠️ Browser usually sets this automatically (cannot override in frontend JS)
+    "User-Agent": "my-app/1.0",
+    "Accept-Language": "en-US",
+  }
+});
+
+Authorization: Bearer <token>
 
 ```
 - `url` → **path + query params**
@@ -38,6 +123,81 @@ createUser({
 - `config.params` → **query params** (`@RequestParam`)
     
 - `config.headers` → **headers** (`@RequestHeader`)
+## ⚙️ What can go inside `config`?
+
+Here are the most important options:
+### 🔹 1. `params` (query string)
+
+params: { filter: "active" }
+
+➡️ `/users/42?filter=active`
+
+---
+
+### 🔹 2. `headers`
+
+headers: {  
+  Authorization: "Bearer abc123"  
+}
+
+---
+
+### 🔹 3. `timeout`
+
+timeout: 5000 // 5 seconds
+
+---
+
+### 🔹 4. `withCredentials` (cookies)
+
+withCredentials: true
+
+➡️ Needed for sending cookies in cross-origin requests
+
+---
+
+### 🔹 5. `responseType`
+
+responseType: "json" // default  
+// or "blob", "text", "arraybuffer"
+
+---
+
+### 🔹 6. `baseURL`
+
+baseURL: "https://api.example.com"
+
+---
+
+### 🔹 7. `auth` (basic auth)
+
+auth: {  
+  username: "admin",  
+  password: "1234"  
+}
+
+---
+
+### 🔹 8. `validateStatus`
+
+validateStatus: (status) => status < 500
+
+➡️ Control which responses count as "error"
+
+---
+
+### 🔹 9. `onUploadProgress` / `onDownloadProgress`
+
+onUploadProgress: (progressEvent) => {  
+  console.log(progressEvent.loaded);  
+}
+
+---
+
+### 🔹 10. `signal` (cancel request)
+
+signal: controller.signal
+
 ---
 frontend
 

@@ -45,7 +45,13 @@ const fun = function() {   return 5; };
 
 ## 4️⃣ Object Method Shorthand
 
-`const obj = {   fun() {     console.log(this);   } };`
+```javascript
+const obj = {
+   fun() {
+        console.log(this);
+      }
+};
+```
 
 - **`function` keyword not used**
     
@@ -54,7 +60,13 @@ const fun = function() {   return 5; };
 - **Java equivalent**: Instance method in a class:
     
 
-`class Obj {   void fun() {     System.out.println(this);   } }`
+```java
+class Obj {
+   void fun() {
+        System.out.println(this);
+    }
+}
+```
 
 ---
 
@@ -86,7 +98,9 @@ const fun = function() {   return 5; };
 
 ## 7️⃣ Immediately Invoked Function Expression (IIFE)
 
-`(function() {   console.log("Runs immediately"); })();`
+```javascript
+(function() {   console.log("Runs immediately"); })();
+```
 
 - **Runs as soon as defined**
     
@@ -95,7 +109,57 @@ const fun = function() {   return 5; };
 - **Java equivalent**: Anonymous inner class executed immediately:
     
 
-`new Runnable() {   { run(); }   void run() { System.out.println("Runs immediately"); } };`
+```java
+new Runnable() {
+
+    {
+        run();
+    }
+
+    public void run() {
+        System.out.println("Runs immediately");
+    }
+
+};
+### What’s happening here?
+
+1. `new Runnable() { ... };`  
+    Creates an **anonymous class** that implements the `Runnable` interface.
+    
+2. `{ run(); }`  
+    This is an **instance initializer block**.  
+    It runs **immediately when the object is created**.
+    
+3. `run()` method  
+    This is the implementation of the `Runnable` interface method.
+    
+
+### Execution Flow
+
+When the object is created:
+
+- The anonymous class is instantiated.
+    
+- The instance initializer block runs automatically.
+    
+- That block calls `run()`.
+    
+- Output:
+    
+    `Runs immediately`
+    
+
+### Important Notes
+
+- This does **not** start a new thread.
+    
+- It just creates a `Runnable` object and immediately calls its `run()` method.
+    
+- To actually start a thread, you would need:
+    
+
+new Thread(new Runnable() {     public void run() {         System.out.println("Runs in new thread");     } }).start();
+```
 
 ---
 
@@ -129,7 +193,12 @@ const fun = function() {   return 5; };
 
 ## 10️⃣ Object Function Assigned to Variable
 
-`const obj = {}; obj.fun = function() { console.log(this); };`
+```javascript
+const obj = {};
+obj.fun = function() {
+ console.log(this);
+};
+```
 
 - Like a method but assigned dynamically
     
@@ -214,7 +283,16 @@ Your code:
 
 Java doesn’t have IIFE, but conceptually:
 
-`new Object() {     {         System.out.println("Runs immediately");     } };`
+```java
+new Object() {
+
+    {
+        System.out.println("Runs immediately");
+    }
+
+};
+
+```
 
 - Anonymous block executes **immediately**
     
@@ -252,7 +330,22 @@ Java doesn’t have IIFE, but conceptually:
 
 Example:
 
-`console.log(fun()); // works function fun() { return 5; }  const obj = {   greet: function() { console.log(this); } }; obj.greet(); // this → obj`
+```javascript
+console.log(fun()); // works
+
+function fun() {
+    return 5;
+}
+
+const obj = {
+    greet: function () {
+        console.log(this);
+    }
+};
+
+obj.greet(); // this → obj
+
+```
 
 ---
 
@@ -267,7 +360,9 @@ Example:
 - Common in functional components or callbacks
     
 
-`const greet = () => console.log(this); greet(); // inherits this from outer scope`
+```javascript
+const greet = () => console.log(this); greet(); // inherits this from outer scope
+```
 
 ---
 

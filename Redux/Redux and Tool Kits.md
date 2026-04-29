@@ -1,26 +1,72 @@
 ## 1️⃣ Old Redux (Classic Way)
 
 ### 🔹 Action Types
+```
+API Data (Redux) → Original state
+          ↓
+Derived copy (map) → UI-specific modifications
+          ↓
+Global changes? → dispatch Redux action to update original state
+```
 
-`// actionTypes.js export const INCREMENT = "INCREMENT"; export const DECREMENT = "DECREMENT"; export const SUCCESS = "SUCCESS";`
-
+```javascript
+actionTypes.js 
+export const INCREMENT = "INCREMENT"; 
+export const DECREMENT = "DECREMENT";
+export const SUCCESS = "SUCCESS";
+```
 ---
 
 ### 🔹 Actions
 
-`// actions.js import { INCREMENT, DECREMENT, SUCCESS } from "./actionTypes";  export const increment = () => ({   type: INCREMENT });  export const decrement = () => ({   type: DECREMENT });  export const success = (payload) => ({   type: SUCCESS,   payload });`
+```javascript
+// actions.js 
+import { INCREMENT, DECREMENT, SUCCESS } from "./actionTypes";  
+export const increment = () => ({   type: INCREMENT });  
+export const decrement = () => ({   type: DECREMENT });  
+export const success = (payload) => ({   type: SUCCESS,   payload });
+```
 
 ---
 
 ### 🔹 Reducer
 
-`// reducer.js import { INCREMENT, DECREMENT, SUCCESS } from "./actionTypes";  const initialState = {   count: 0,   data: null };  export default function counterReducer(state = initialState, action) {   switch (action.type) {     case INCREMENT:       return { ...state, count: state.count + 1 };      case DECREMENT:       return { ...state, count: state.count - 1 };      case SUCCESS:       return { ...state, data: action.payload };      default:       return state;   } }`
+```javascript
+// reducer.js 
+import { INCREMENT, DECREMENT, SUCCESS } from "./actionTypes";  
+const initialState = {   count: 0,   data: null };  
+export default function counterReducer(state = initialState, action) {
+   switch (action.type) {     
+	   case INCREMENT:       
+		   return { ...state, count: state.count + 1 };      
+	   case DECREMENT:       
+		   return { ...state, count: state.count - 1 };      
+	   case SUCCESS:       
+		   return { ...state, data: action.payload };      default:       return state;
+	   } 
+}
+```
 
 ---
 
 ### 🔹 Store
 
-`// store.js import { createStore } from "redux"; import counterReducer from "./reducer";  const store = createStore(counterReducer);  export default store;`
+```javascript
+// store.js 
+import { createStore } from "redux"; 
+import counterReducer from "./reducer";
+  
+const store = createStore(counterReducer);
+  
+export default store;
+```
+
+### Used: (Same, Old Redux and Redux Tool Kit):
+```javascript
+// Dispatch an action  
+store.dispatch(increment()); // calls reducer  
+store.dispatch(success({ name: "Ali" })); // calls reducer
+```
 
 ---
 
@@ -32,13 +78,58 @@
 
 ### 🔹 Slice (Actions + Types + Reducer together)
 
-`// counterSlice.js import { createSlice } from "@reduxjs/toolkit";  const counterSlice = createSlice({   name: "counter",   initialState: {     count: 0,     data: null   },   reducers: {     increment(state) {       state.count += 1; // looks mutable, but safe (Immer)     },     decrement(state) {       state.count -= 1;     },     success(state, action) {       state.data = action.payload;     }   } });  export const { increment, decrement, success } = counterSlice.actions; export default counterSlice.reducer;`
+```javascript
+// counterSlice.js
+import { createSlice } from "@reduxjs/toolkit";
+
+const counterSlice = createSlice({
+  name: "counter",
+  initialState: {
+    count: 0,
+    data: null,
+  },
+  reducers: {
+    increment(state) {
+      // looks mutable, but safe (Immer)
+      state.count += 1;
+    },
+    decrement(state) {
+      state.count -= 1;
+    },
+    success(state, action) {
+      state.data = action.payload;
+    },
+  },
+});
+
+export const { increment, decrement, success } = counterSlice.actions;
+export default counterSlice.reducer;
+```
 
 ---
 
 ### 🔹 Store
 
-`// store.js import { configureStore } from "@reduxjs/toolkit"; import counterReducer from "./counterSlice";  export const store = configureStore({   reducer: {     counter: counterReducer   } });`
+```javascript
+// store.js
+import { configureStore } from "@reduxjs/toolkit";
+import counterReducer from "./counterSlice";
+
+/*  
+Explanation:  
+1. `counterSlice.reducer` is the actual reducer function created by createSlice.  
+2. In store.js, we import it as `counterReducer` (local name, can be anything).  
+3. The `counter` key in the reducer object defines the slice of state:  
+state.counter → holds { count, data } managed by counterReducer.  
+4. Actions (increment, decrement, success) are exported separately to dispatch updates.  
+*/
+
+export const store = configureStore({
+  reducer: {
+    counter: counterReducer,
+  },
+});
+```
 
 ---
 
@@ -52,6 +143,19 @@
 |`switch(action.type)`|Reducer functions|
 |Immutable updates|Immer (write mutable code)|
 |Multiple files|Single slice file|
+### ✅ TL;DR
+
+|Feature|Old Redux|Redux Toolkit|
+|---|---|---|
+|Action types|Manual string constants|Auto-generated from slice|
+|Action creators|Manual|Auto-generated from slice|
+|Reducer|Manual switch-case|Defined inline in slice|
+|Dispatch|`store.dispatch(action)`|Same|
+|Immutability|Manual (`...state`)|Automatic via Immer|
+
+---
+
+Basically, **dispatching actions looks identical**, but **Redux Toolkit simplifies creating the actions and reducer**
 
 ---
 
@@ -99,12 +203,6 @@ It **auto-creates**:
     
 - `rejected` (ERROR)
     
-
-Example:
-
-`export const fetchData = createAsyncThunk(   "counter/fetchData",   async () => {     const res = await fetch("/api/data");     return res.json();   } );`
-
-`extraReducers: (builder) => {   builder     .addCase(fetchData.pending, (state) => {       state.loading = true;     })     .addCase(fetchData.fulfilled, (state, action) => {       state.loading = false;       state.data = action.payload;     })     .addCase(fetchData.rejected, (state) => {       state.loading = false;     }); }`
 
 ---
 
@@ -732,4 +830,4 @@ Here’s the **current usage trend (as of 2025–2026)** for React-side state/da
 
 👉 **Use React Query if most of your app is about fetching data from backend**  
 👉 **Use Redux Toolkit if you need a shared global store with many interactions or complex logic**  
-👉 **You can use both together** — one for server data, one for global UI/logic
+👉 **You can use both together** — one for server data, one for global UI/logicgg

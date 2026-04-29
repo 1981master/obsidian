@@ -20,14 +20,12 @@ DDL command `CREATE TABLE` defines the structure of the database. `PRIMARY KEY` 
 
 ### SQL:
 
-`INSERT INTO Customers (id, name, email) VALUES (1, 'Alice', 'alice@mail.com'), (2, 'Bob', 'bob@mail.com'), (3, 'Charlie', 'charlie@mail.com');`
+`INSERT INTO Customers (id, name, email) VALUES (1, 'Alice', 'alice@mail.com'), (2, 'Bob', 'bob@mail.com'), (3, 'Charlie', 'charlie@mail.com'));`
 
 **Comment:**  
-DML `INSERT` adds data to the table.
+-- DML `INSERT` adds data to the table.
 
----
-
-## **3. Select All Data**
+--  3. Select All Data**
 
 **Problem:** Display all customer records.
 

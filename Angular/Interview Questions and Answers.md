@@ -1,5 +1,5 @@
-```
-# ✅ **Angular Interview Questions — Detailed Answers (1–25)**
+
+#### ✅ **Angular Interview Questions — Detailed Answers (1–25)**
 
 **Batch 1 of 4**
 
@@ -396,7 +396,10 @@ Lazy loading loads feature modules **only when needed**, improving performance.
 
 Example:
 
-`loadChildren: () => import('./users/users.module')                      .then(m => m.UsersModule)`
+```javascript
+loadChildren: () => import('./users/users.module')
+                      .then(m => m.UsersModule)
+```
 
 ---
 
@@ -1269,4 +1272,3 @@ Options:
 - Akita
     
 - NGXS
-```

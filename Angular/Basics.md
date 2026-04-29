@@ -1,45 +1,39 @@
-```text
-# ✅ **(2) Angular Complete Table Refresher**
 
-### **Angular Core Concepts — Full Table**
+| **Topic**                 | **Description**                               | **Example**                                 |
+| ------------------------- | --------------------------------------------- | ------------------------------------------- |
+| **Component**             | Building block of UI                          | `@Component({ selector: 'app-user' })`      |
+| **Module**                | Groups components/services                    | `@NgModule({ declarations: [...] })`        |
+| **Template**              | Component’s HTML                              | `<h1>{{ title }}</h1>`                      |
+| **Data Binding**          | Sync data ↔ UI                                | `{{ name }}`, `[value]`, `(click)`          |
+| **Event Binding**         | Component responds to events                  | `(click)="save()"`                          |
+| **Property Binding**      | Pass value into elements                      | `[disabled]="isLoading"`                    |
+| **Two-way Binding**       | Sync input with model                         | `[(ngModel)]="email"`                       |
+| **Directives**            | Change DOM structure/behavior                 | `*ngIf`, `*ngFor`, `ngClass`                |
+| **Services**              | Shared logic (Dependency Injection)           | `UserService`                               |
+| **Dependency Injection**  | Provide services to components                | `constructor(private service: UserService)` |
+| **Routing**               | Navigation between pages                      | `<router-outlet>`                           |
+| **Route Params**          | Dynamic route segments                        | `/user/:id`                                 |
+| **Guards**                | Protect or control route access               | `canActivate()`                             |
+| **HTTP Client**           | Make API calls                                | `http.get('/api')`                          |
+| **RxJS Observables**      | Handle async data streams                     | `this.http.get().subscribe()`               |
+| **Operators**             | Transform observable streams                  | `map`, `switchMap`, `filter`                |
+| **Pipes**                 | Transform data in templates                   | `{{ price \| currency }}`                   |
+| **Forms Module**          | Template-driven forms                         | `ngModel`                                   |
+| **Reactive Forms**        | FormGroup & FormControl based forms           | `form = new FormGroup({...})`               |
+| **Lifecycle Hooks**       | Component lifecycle methods                   | `ngOnInit()`, `ngOnDestroy()`               |
+| **Input Decorator**       | Parent → Child data flow                      | `@Input() user`                             |
+| **Output Decorator**      | Child → Parent event emission                 | `@Output() clicked`                         |
+| **Async Pipe**            | Auto-subscribe/unsubscribe to observable      | `{{ user$ \| async }}`                      |
+| **Interfaces**            | Define data models                            | `interface User { id: number; }`            |
+| **Feature Modules**       | Organize large applications                   | `UsersModule`                               |
+| **Lazy Loading**          | Load modules on demand                        | `loadChildren`                              |
+| **Resolvers**             | Fetch data before route loads                 | `resolve()`                                 |
+| **Interceptors**          | Intercept HTTP requests/responses             | Token injection                             |
+| **Environment Files**     | Environment-specific configs                  | `environment.ts`                            |
+| **Change Detection**      | Controls UI update strategy                   | `ChangeDetectionStrategy.OnPush`            |
+| **Standalone Components** | Components without modules                    | `standalone: true`                          |
+| **Signals**               | Fine-grained reactivity (new Angular feature) | `signal(0)`                                 |
 
-|Topic|Description|Example|
-|---|---|---|
-|**Component**|Building block of UI|`@Component({ selector: 'app-user' })`|
-|**Module**|Groups components/services|`@NgModule({ declarations: [...] })`|
-|**Template**|Component’s HTML|`<h1>{{title}}</h1>`|
-|**Data Binding**|Sync data ↔ UI|`{{name}}`, `[value]`, `(click)`|
-|**Event Binding**|Component responds to events|`(click)="save()"`|
-|**Property Binding**|Pass value into elements|`[disabled]="isLoading"`|
-|**Two-way Binding**|Sync input with model|`[(ngModel)]="email"`|
-|**Directives**|Change DOM structure|`*ngIf`, `*ngFor`, `ngClass`|
-|**Services**|Shared logic (DI)|`UserService`|
-|**Dependency Injection**|Provide services|`constructor(private service: ...)`|
-|**Routing**|Navigation between pages|`<router-outlet>`|
-|**Route Params**|Dynamic routes|`/user/:id`|
-|**Guards**|Protect routes|`canActivate()`|
-|**HTTPClient**|API calls|`http.get('/api')`|
-|**RxJS Observables**|Async streams|`this.http.get().subscribe()`|
-|**Operators**|Transform streams|`map`, `switchMap`, `filter`|
-|**Pipes**|Transform data in template|`{{price|
-|**Forms Module**|Template-driven forms|`ngModel`|
-|**Reactive Forms**|FormGroup + FormControl|`form = new FormGroup({...})`|
-|**Lifecycle Hooks**|Component lifecycle|`ngOnInit()`, `ngOnDestroy()`|
-|**Input Decorator**|Parent → Child|`@Input() user`|
-|**Output Decorator**|Child → Parent|`@Output() clicked`|
-|**Async Pipe**|Auto-subscribe to observable|`{{ user$|
-|**Interfaces**|Data models|`interface User { id: number; }`|
-|**Feature Modules**|Organize large apps|`UsersModule`|
-|**Lazy Loading**|Load modules on demand|`loadChildren`|
-|**Resolvers**|Fetch data before route loads|`resolve()`|
-|**Interceptors**|Intercept HTTP requests|Token injection|
-|**Environment Files**|Dev/prod configs|`environment.ts`|
-|**Change Detection**|Optimizes app updates|`OnPush`|
-|**Standalone Components**|Components w/o modules|`standalone: true`|
-|**Signals**|Reactivity (new Angular feature)|`signal(0)`|
-```
-
-```
 ## **📌 Features You Will Build**
 
 ### **Phase 1 — Basic**
@@ -151,4 +145,3 @@ If you want, I can generate:
 ✅ Database schema  
 ✅ Full UI with Ant Design  
 ✅ And output the **entire project as a downloadable ZIP**
-```

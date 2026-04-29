@@ -411,8 +411,7 @@ Sometimes `enum + switch` or arrays are faster & simpler.
 
 ## 🧠 Mental rule (easy to remember)
 
-> **If you need FAST access by KEY and order does NOT matter → use `HashMap`
-> **
+> **If you need FAST access by KEY and order does NOT matter → use `HashMap`>
 
 Show bad HashMap usage (common bugs)
 
@@ -425,15 +424,31 @@ These are **interview gold** and **real-world critical**.
 
 ### ❌ Bad
 
-`class User {     String email;      @Override     public boolean equals(Object o) {         return email.equals(((User) o).email);     } }`
+```java
+class User {
+    String email;
+    @Override     
+    public boolean equals(Object o) {
+		 return email.equals(((User) o).email);
+	}
+}
+```
 
 ### 🔥 Bug
 
-`map.put(new User("a@test.com"), "ADMIN"); map.get(new User("a@test.com")); // null ❌`
+```java
+map.put(new User("a@test.com"), "ADMIN");
+map.get(new User("a@test.com")); // null
+❌
+``` 
 
 ### ✅ Fix
 
-`@Override public int hashCode() {     return Objects.hash(email); }`
+```java
+@Override public int hashCode() {
+     return Objects.hash(email);
+}
+```
 
 📌 **Rule**
 
@@ -516,16 +531,298 @@ Use:
 
 ### ❌ Bad
 
-`for (String key : map.keySet()) {     map.remove(key); // ❌ ConcurrentModificationException }`
+```java
+for (String key : map.keySet()) {
+     map.remove(key); // ❌ ConcurrentModificationException
+}
+```
 
 ### ✅ Fix
 
-`Iterator<String> it = map.keySet().iterator(); while (it.hasNext()) {     it.next();     it.remove(); }`
+```java
+Iterator<String> it = map.keySet().iterator();
+while (it.hasNext()) {
+     it.next();
+     it.remove();
+      }
+```
 
 OR
 
 `map.clear();`
+```java
+import java.util.*;
 
+public class MapModificationExample {
+
+    public static void main(String[] args) {
+
+        Map<String, Integer> map = new HashMap<>();
+        map.put("A", 1);
+        map.put("B", 2);
+        map.put("C", 3);
+
+        // -------------------------------------------------
+        // ❌ 1. Removing inside for-each (WILL THROW EXCEPTION)
+        // -------------------------------------------------
+        try {
+            for (String key : map.keySet()) {
+                map.remove(key);   // ❌ ConcurrentModificationException
+            }
+        } catch (Exception e) {
+            System.out.println("Exception caught: " + e);
+        }
+
+        // Reset map
+        map.clear();
+        map.put("A", 1);
+        map.put("B", 2);
+        map.put("C", 3);
+
+        // -------------------------------------------------
+        // ✅ 2. Modifying VALUES (SAFE)
+        // -------------------------------------------------
+        for (String key : map.keySet()) {
+            map.put(key, map.get(key) + 10);   // ✅ Safe (no structural change)
+        }
+        System.out.println("After value modification: " + map);
+
+        // -------------------------------------------------
+        // ✅ 3. Modifying VALUES using entrySet (BEST PRACTICE)
+        // -------------------------------------------------
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            entry.setValue(entry.getValue() + 5);  // ✅ Safe & efficient
+        }
+        System.out.println("After entry.setValue(): " + map);
+
+        // -------------------------------------------------
+        // ❌ 4. Adding new key inside loop (WILL THROW EXCEPTION)
+        // -------------------------------------------------
+        try {
+            for (String key : map.keySet()) {
+                map.put("D", 100);   // ❌ Structural modification
+            }
+        } catch (Exception e) {
+            System.out.println("Exception caught: " + e);
+        }
+
+        // -------------------------------------------------
+        // ✅ 5. SAFE removal using Iterator
+        // -------------------------------------------------
+        Iterator<String> iterator = map.keySet().iterator();
+        while (iterator.hasNext()) {
+            iterator.next();
+            iterator.remove();   // ✅ Safe removal
+        }
+
+        System.out.println("After safe removal: " + map);
+    }
+}
+
+
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class MapAddExamples {
+
+    public static void main(String[] args) {
+
+        Map<String, Integer> map = new HashMap<>();
+        map.put("A", 1);
+        map.put("B", 2);
+        map.put("C", 3);
+
+        // -------------------------------------------------
+        // ❌ 1. Adding new key inside for-each (STRUCTURAL CHANGE)
+        // -------------------------------------------------
+        try {
+            for (String key : map.keySet()) {
+
+                map.put("D", 4);   // ❌ ConcurrentModificationException
+
+                // What if we use putIfAbsent instead?
+                // map.putIfAbsent("D", 4);  // ❌ STILL throws exception
+
+                // WHY?
+                // Because BOTH put() and putIfAbsent()
+                // change the structure if key doesn't exist.
+            }
+        } catch (Exception e) {
+            System.out.println("Exception caught: " + e);
+        }
+
+
+        // -------------------------------------------------
+        // ✅ 2. Safe way: collect first, then add
+        // -------------------------------------------------
+        List<String> keysToAdd = new ArrayList<>();
+
+        for (String key : map.keySet()) {
+            if (key.equals("A")) {
+                keysToAdd.add("D");
+            }
+        }
+
+        for (String newKey : keysToAdd) {
+            map.putIfAbsent(newKey, 4);  // ✅ Safe
+        }
+
+        System.out.println("After safe add: " + map);
+
+
+        // -------------------------------------------------
+        // ✅ 3. What if we need to OVERRIDE the value?
+        // -------------------------------------------------
+
+        // Option 1: simple overwrite
+        map.put("A", 100);   // ✅ overrides existing value
+
+        // Option 2: compute
+        map.compute("B", (k, v) -> 200);  // ✅ force new value
+
+        // Option 3: merge (very common)
+        map.merge("C", 500, (oldVal, newVal) -> newVal); // override
+
+        System.out.println("After override: " + map);
+
+
+        // -------------------------------------------------
+        // ✅ 4. ConcurrentHashMap (Advanced)
+        // -------------------------------------------------
+        Map<String, Integer> concurrentMap = new ConcurrentHashMap<>();
+        concurrentMap.put("X", 1);
+        concurrentMap.put("Y", 2);
+
+        for (String key : concurrentMap.keySet()) {
+            concurrentMap.put("Z", 3);   // ✅ No exception here
+        }
+
+        System.out.println("ConcurrentHashMap result: " + concurrentMap);
+    }
+}
+
+
+
+import java.util.*;
+
+public class MapAlterAllApproaches {
+
+    public static void main(String[] args) {
+
+        // -------------------------------------------------
+        // ORIGINAL MAP
+        // -------------------------------------------------
+        Map<String, Integer> map = new HashMap<>();
+        map.put("A", 10);
+        map.put("B", 20);
+        map.put("C", 30);
+
+        System.out.println("Original map: " + map);
+
+
+        // -------------------------------------------------
+        // ❌ WRONG: Structural modification inside for-each
+        // -------------------------------------------------
+        try {
+            for (String key : map.keySet()) {
+                if (key.equals("A")) {
+                    map.remove(key);  // ❌ ConcurrentModificationException
+                }
+                map.put("D", 40);     // ❌ Also structural change
+            }
+        } catch (Exception e) {
+            System.out.println("Exception caught: " + e);
+        }
+
+
+        // -------------------------------------------------
+        // RESET MAP
+        // -------------------------------------------------
+        map.clear();
+        map.put("A", 10);
+        map.put("B", 20);
+        map.put("C", 30);
+
+
+        // -------------------------------------------------
+        // ✅ 1️⃣ removeIf() (BEST for removal only)
+        // -------------------------------------------------
+        map.entrySet().removeIf(entry -> entry.getValue() < 20);
+        System.out.println("After removeIf(): " + map);
+
+
+        // -------------------------------------------------
+        // RESET MAP
+        // -------------------------------------------------
+        map.clear();
+        map.put("A", 10);
+        map.put("B", 20);
+        map.put("C", 30);
+
+
+        // -------------------------------------------------
+        // ✅ 2️⃣ Iterator (Safe removal during iteration)
+        // -------------------------------------------------
+        Iterator<Map.Entry<String, Integer>> it = map.entrySet().iterator();
+
+        while (it.hasNext()) {
+            Map.Entry<String, Integer> entry = it.next();
+
+            if (entry.getValue() < 20) {
+                it.remove();  // ✅ SAFE
+            }
+        }
+
+        System.out.println("After Iterator remove(): " + map);
+
+
+        // -------------------------------------------------
+        // RESET MAP
+        // -------------------------------------------------
+        map.clear();
+        map.put("A", 10);
+        map.put("B", 20);
+        map.put("C", 30);
+
+
+        // -------------------------------------------------
+        // ✅ 3️⃣ Two-Phase / New Map (BEST for Add + Remove)
+        // -------------------------------------------------
+        Map<String, Integer> newMap = new HashMap<>();
+
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+
+            // Keep only values >= 20
+            if (entry.getValue() >= 20) {
+                newMap.put(entry.getKey(), entry.getValue());
+            }
+
+            // Add new entry conditionally
+            if (entry.getKey().equals("B")) {
+                newMap.put("D", 40);
+            }
+        }
+
+        map = newMap;
+
+        System.out.println("After two-phase rebuild: " + map);
+    }
+}
+
+```
+
+# 🔥 What This Shows
+
+- ❌ Removing with `map.remove()` inside for-each → **Exception**
+    
+- ❌ Adding new key inside loop → **Exception**
+    
+- ✅ Updating values → **Safe**
+    
+- ✅ `entry.setValue()` → **Best practice**
+    
+- ✅ `iterator.remove()` → **Correct way to remove**
 ---
 
 ## ❌ 6️⃣ Assuming HashMap preserves order
@@ -636,7 +933,13 @@ Use safe identifiers:
 
 ## 🧠 One-screen cheat rules
 
-`✔ Immutable keys ✔ equals() + hashCode() ✔ ConcurrentHashMap for threads ✔ LinkedHashMap if order matters ✔ TreeMap if sorted ✔ Set initial capacity ❌ Never rely on iteration order`
+✔ Immutable keys 
+✔ equals() + hashCode() 
+✔ ConcurrentHashMap for threads 
+✔ LinkedHashMap if order matters 
+✔ TreeMap if sorted 
+✔ Set initial capacity 
+❌ Never rely on iteration order
 
 ---
 

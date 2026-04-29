@@ -433,7 +433,13 @@ Below is a **senior-level, interview-oriented deep dive** covering **all 4 topic
 
 ### ❌ Wrong
 
-`useEffect(async () => {   const res = await fetch("/api/users");   setUsers(await res.json()); }, []);`
+```javascript
+useEffect(
+	async () => {   
+		const res = await fetch("/api/users");   
+		setUsers(await res.json()); 
+}, []);
+```
 
 ### ❗ Why wrong?
 
@@ -448,25 +454,70 @@ Below is a **senior-level, interview-oriented deep dive** covering **all 4 topic
 
 ### ✅ Correct Pattern #1 (Most Common)
 
-`useEffect(() => {   const loadUsers = async () => {     const res = await fetch("/api/users");     const data = await res.json();     setUsers(data);   };    loadUsers(); }, []);`
+```javascript
+useEffect(() => {   
+	const loadUsers = async () => {
+	     const res = await fetch("/api/users");    
+	      const data = await res.json();     
+	      setUsers(data);
+    };    
+      loadUsers(); 
+}, []);
+```
 
 ---
 
 ### ✅ Correct Pattern #2 (IIFE)
 
-`useEffect(() => {   (async () => {     const res = await fetch("/api/users");     setUsers(await res.json());   })(); }, []);`
+```javascript
+useEffect(() => {   
+	(async () => {     
+		const res = await fetch("/api/users");     
+		setUsers(await res.json());   
+	})(); 
+}, []);
+```
 
 ---
 
 ### ✅ Handling Errors (Interview Gold ⭐)
 
-`useEffect(() => {   const load = async () => {     try {       const res = await fetch("/api/users");       setUsers(await res.json());     } catch (e) {       setError(e.message);     }   };   load(); }, []);`
+```javascript
+useEffect(() => {   
+	const load = async () => {     
+		try {       
+			const res = await fetch("/api/users");       
+			setUsers(await res.json());    
+		} catch (e) {       
+			 setError(e.message);     
+		}   
+	};   
+	load(); 
+}, []);
+```
 
 ---
 
 ### ⚠️ Async + Cleanup (Advanced)
 
-`useEffect(() => {   let isMounted = true;    const load = async () => {     const res = await fetch("/api/users");     if (isMounted) setUsers(await res.json());   };    load();    return () => {     isMounted = false;   }; }, []);`
+```javascript
+useEffect(() => {
+    let isMounted = true;
+
+    const load = async () => {
+        const res = await fetch("/api/users");
+        if (isMounted) {
+            setUsers(await res.json());
+        }
+    };
+
+    load();
+
+    return () => {
+        isMounted = false;
+    };
+}, []);
+```
 
 ✅ Prevents state update after unmount
 
@@ -583,7 +634,15 @@ or redesign logic
 
 ✅ Fix:
 
-`useEffect(() => {   window.addEventListener("resize", onResize);   return () => window.removeEventListener("resize", onResize); }, []);`
+```javascript
+useEffect(() => {
+    window.addEventListener("resize", onResize);
+
+    return () => {
+        window.removeEventListener("resize", onResize);
+    };
+}, []);
+```
 
 ---
 
@@ -653,7 +712,16 @@ You’ve used **Vue Options API**, so here’s a **clear mental mapping** 👇
 
 ### Vue
 
-`watch: {   user: {     handler() {       fetchData();     },     immediate: true   } }`
+```javascript
+watch: {
+    user: {
+        handler() {
+            fetchData();
+        },
+        immediate: true
+    }
+}
+```
 
 ---
 
