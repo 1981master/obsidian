@@ -107,11 +107,11 @@ If you skip this, you’re already behind.
     
 - Streams API
     
-    - `map`, `filter`, `reduce`
+    - `map` [[JAVA/Map/Maps|Maps]], `filter`, `reduce`
         
     - `collect`, `groupingBy`
         
-- `Optional`
+- `Optional` [[optional]]
     
 - Method references
     

@@ -4,53 +4,24 @@
     "type": "split",
     "children": [
       {
-        "id": "c72ee2542b05f343",
+        "id": "ab5ea0ffc78b6527",
         "type": "tabs",
         "children": [
           {
-            "id": "ecf6e382905d6b6a",
+            "id": "651c1055e31b5821",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Deffufa/Deffufa.md",
+                "file": "React/useEffect & useLayoutEffect/Basics.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Deffufa"
-            }
-          },
-          {
-            "id": "ffc41c28a16fe2c4",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "React/Baseics.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Baseics"
-            }
-          },
-          {
-            "id": "0800e599ae08c157",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Interview/java/Coding Interview/GroupBy.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "GroupBy"
+              "title": "Basics"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -82,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "optional",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -215,44 +186,44 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "0800e599ae08c157",
+  "active": "651c1055e31b5821",
   "lastOpenFiles": [
-    "Interview/java/Coding Interview/Code Reduce.md",
+    "React/React best bractie.md",
+    "React/Practice steps.md",
+    "React/Name Best Practice.md",
+    "React/Context.md",
+    "React/Baseics.md",
+    "JAVA/Java 8/groupingBy.md",
+    "JAVA/Java 8/Stream API.md",
+    "JAVA/Java 8/optional.md",
+    "Untitled.base",
+    "Untitled 1.md",
+    "README.md",
+    "Untitled.md",
+    "JAVA/Java 8",
+    "Spring Boot/Annotations/@Async.md",
+    "Spring Boot/Annotations/@GetMapping.md",
+    "JAVA/code/Conde Road Map.md",
+    "JAVA/Map/Maps.md",
+    "Deffufa/Deffufa.md",
+    "Aws/Start.md",
+    "Interview/javascript/find vs filter.md",
+    "Interview/javascript/Interview tips.md",
+    "Javascript/loops/forEach.md",
+    "Interview/javascript/Code 1.md",
+    "Interview/java/HashMap Hashtable ConcurrentHashMap.md",
+    "Interview/java/Coding Interview/Reduce.md",
+    "Interview/java/Coding Interview/Frequent Counting.md",
+    "Interview/java/Coding Interview/Java Coding.md",
     "Interview/java/Coding Interview/GroupBy.md",
     "Interview/java/Coding Interview",
-    "Interview/javascript/code 2.md",
-    "Interview/javascript/Code 1.md",
-    "Interview/java/Exception.md",
-    "Interview/java/HashMap Hashtable ConcurrentHashMap.md",
-    "Javascript/loops/For.md",
     "Interview/javascript",
     "Javascript/loops",
-    "CSS/Main Layout.md",
-    "CSS/Practice.md",
-    "Math.md",
     "CSS",
-    "Untitled 1.md",
-    "React/Baseics.md",
-    "Untitled.md",
-    "React/useEffect & useLayoutEffect/Basics.md",
-    "Spring Boot/Annotations/@GetMapping.md",
-    "Spring Boot/Annotations/@Async.md",
-    "Spring Boot/Annotations/@Annotations.md",
-    "JAVA & Javascript/Strings.md",
-    "JAVA & Javascript/Objects.md",
-    "JAVA & Javascript/Maps.md",
-    "JAVA/code/Some.md",
-    "JAVA/code/Remove Numbers from string.md",
-    "JAVA/code/Conde Road Map.md",
-    "JAVA/Arrays Methods.md",
-    "JAVA/Arrays.md",
-    "JAVA/Array of String.md",
     "electron",
     "Deffufa",
     "Ubuntu Server",
     "Spring Boot/JPA",
-    "TypeScript",
-    "API",
     "Schema Test.canvas"
   ]
 }
